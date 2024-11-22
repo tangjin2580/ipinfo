@@ -11,11 +11,12 @@
 <!-- 查询 IP 和域名的盒子 -->
 <div class="container">
     <h1>IP信息查询</h1>
-    <input type="text" id="serverInput" value="http://192.168.0.105:8080" placeholder="输入后端服务器地址"/>
+    <!--隐藏后端地址-->
+    <input type="text" id="serverInput" value="http://123.138.200.230:8999" placeholder="输入后端服务器地址" style="display:none;"/>
     <input type="text" id="dnsInput" value="114.114.114.114" placeholder="输入您的自定义 DNS 服务器"/>
     <input type="text" id="ipInput" placeholder="请输入IP地址或域名" />
     <button id="fetchBtn">查询信息</button>
-    <p id="loading" style="display:none;">加载中...</p>
+    <p id="loading" style="display:none;">解析中...</p>
     <p id="error" class="error" style="display:none;"></p>
     <div id="resolvedIPsContainer"></div> <!-- 用于动态添加解析的 IP 盒子 -->
 </div>
