@@ -24,7 +24,7 @@ async function queryIP(ipInput) {
     const error = document.getElementById('error');
     const resolvedIPsContainer = document.getElementById('resolvedIPsContainer');
     const dnsInput = document.getElementById('dnsInput').value.trim() || "8.8.8.8"; // 获取自定义 DNS，若未填则使用默认
-    const serverInput = document.getElementById('serverInput').value.trim() || "http://192.168.0.105:8080"; // 获取服务器地址
+    const serverInput = document.getElementById('serverInput').value.trim() || "http://123.138.200.230:8999"; // 获取服务器地址
 
     loading.style.display = 'block';
     error.style.display = 'none';
