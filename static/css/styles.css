@@ -1,0 +1,64 @@
+body {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    margin: 0;
+    height: 100vh;
+    background: url('https://img.xjh.me/random_img.php') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+.container {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    width: 350px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+.container:hover {
+    transform: scale(1.02);
+}
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: #45a049;
+}
+.error { color: red; text-align: center; }
+.clock { font-size: 18px; color: #007BFF; margin-top: 10px; }
+.ip-info-box {
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid #007BFF;
+    border-radius: 5px;
+    background-color: rgba(0, 123, 255, 0.1);
+    transition: box-shadow 0.3s;
+}
+.ip-info-box:hover {
+    box-shadow: 0 4px 15px rgba(0, 83, 255, 0.3);
+}
