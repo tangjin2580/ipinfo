@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IP信息查询</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css"> <!-- 引用 CSS 文件 -->
 </head>
 <body>
 
 <!-- 查询 IP 和域名的盒子 -->
 <div class="container">
     <h1>IP信息查询</h1>
+    <input type="text" id="dnsInput" value="114.114.114.114" placeholder="输入您的自定义 DNS 服务器"/>
     <input type="text" id="ipInput" placeholder="请输入IP地址或域名" />
     <button id="fetchBtn">查询信息</button>
     <p id="loading" style="display:none;">加载中...</p>
@@ -26,6 +27,5 @@
 </div>
 
 <script src="js/script.js"></script> <!-- 引用 JS 文件 -->
-
 </body>
 </html>

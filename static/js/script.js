@@ -17,24 +17,13 @@ function getSystemInfo() {
     return userAgent; // 返回 userAgent 中的系统信息（可以做进一步解析）
 }
 
-async function resolveDomain(domain) {
-    try {
-        const response = await fetch(`http://192.168.0.105:8080/api/resolve/${domain}`);
-        if (!response.ok) {
-            throw new Error('无法解析域名');
-        }
-        const data = await response.json();
-        return data.ip;  // 返回解析出的 IP 地址数组
-    } catch (error) {
-        console.error(error);
-        return null;  // 返回 null 如果失败
-    }
-}
+
 
 async function queryIP(ipInput) {
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
     const resolvedIPsContainer = document.getElementById('resolvedIPsContainer');
+    const dnsInput = document.getElementById('dnsInput').value.trim() || "8.8.8.8"; // 获取自定义 DNS，若未填则使用默认
 
     loading.style.display = 'block';
     error.style.display = 'none';
@@ -48,14 +37,26 @@ async function queryIP(ipInput) {
             ips.push(ipInput); // 将其视为有效 IP
         } else {
             // 输入为域名，进行解析
-            const resolvedIPs = await resolveDomain(ipInput);
+            const resolvedIPs = await resolveDomain(ipInput, dnsInput); // 传递 DNS 服务器
             if (resolvedIPs) {
                 ips = resolvedIPs; // 获取到解析结果
             } else {
                 throw new Error('未能解析域名'); // 如果解析结果为空，抛出错误
             }
         }
-
+        async function resolveDomain(domain, dnsServer) {
+            try {
+                const response = await fetch(`http://192.168.0.105:8080/api/resolve/${domain}?dns=${dnsServer}`);
+                if (!response.ok) {
+                    throw new Error('无法解析域名');
+                }
+                const data = await response.json();
+                return data.ip;  // 返回解析出的 IP 地址数组
+            } catch (error) {
+                console.error(error);
+                return null;  // 返回 null 如果失败
+            }
+        }
         // 收集信息并显示在页面
         for (const ip of ips) {
             const response = await fetch(`http://192.168.0.105:8080/api/ipinfo/${ip}`);
