@@ -24,6 +24,7 @@ async function queryIP(ipInput) {
     const error = document.getElementById('error');
     const resolvedIPsContainer = document.getElementById('resolvedIPsContainer');
     const dnsInput = document.getElementById('dnsInput').value.trim() || "8.8.8.8"; // 获取自定义 DNS，若未填则使用默认
+    const serverInput = document.getElementById('serverInput').value.trim() || "http://192.168.0.105:8080"; // 获取服务器地址
 
     loading.style.display = 'block';
     error.style.display = 'none';
@@ -37,7 +38,7 @@ async function queryIP(ipInput) {
             ips.push(ipInput); // 将其视为有效 IP
         } else {
             // 输入为域名，进行解析
-            const resolvedIPs = await resolveDomain(ipInput, dnsInput); // 传递 DNS 服务器
+            const resolvedIPs = await resolveDomain(ipInput, dnsInput,serverInput); // 传递 DNS 服务器
             if (resolvedIPs) {
                 ips = resolvedIPs; // 获取到解析结果
             } else {
@@ -59,7 +60,7 @@ async function queryIP(ipInput) {
         }
         // 收集信息并显示在页面
         for (const ip of ips) {
-            const response = await fetch(`http://127.0.0.1:8080/api/ipinfo/${ip}`);
+            const response = await fetch(`${serverInput}/api/ipinfo/${ip}`);
             if (!response.ok) {
                 throw new Error('无法获取 IP 信息');
             }
