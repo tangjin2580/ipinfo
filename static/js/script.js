@@ -46,7 +46,7 @@ async function queryIP(ipInput) {
         }
         async function resolveDomain(domain, dnsServer) {
             try {
-                const response = await fetch(`http://192.168.0.105:8080/api/resolve/${domain}?dns=${dnsServer}`);
+                const response = await fetch(`http://127.0.0.1:8080/api/resolve/${domain}?dns=${dnsServer}`);
                 if (!response.ok) {
                     throw new Error('无法解析域名');
                 }
@@ -59,7 +59,7 @@ async function queryIP(ipInput) {
         }
         // 收集信息并显示在页面
         for (const ip of ips) {
-            const response = await fetch(`http://192.168.0.105:8080/api/ipinfo/${ip}`);
+            const response = await fetch(`http://127.0.0.1:8080/api/ipinfo/${ip}`);
             if (!response.ok) {
                 throw new Error('无法获取 IP 信息');
             }
