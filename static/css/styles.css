@@ -1,12 +1,11 @@
+/* Embed CSS for easy access */
 body {
     font-family: 'Arial', sans-serif;
     padding: 20px;
     margin: 0;
     height: 100vh;
-    width:100%;
+    width: 100%;
     background: url(https://picsum.photos/1920/1080/?random) no-repeat;
-    -moz-background-size: cover;    /*背景图片拉伸以铺满全屏*/
-    -webkit-background-size: cover;
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -14,7 +13,11 @@ body {
     justify-content: center;
     color: #333;
 }
-
+.main-container {
+    display: flex; /* 主容器使用 Flexbox 排列两个子容器 */
+    justify-content: space-between; /* 在主容器间隔开来 */
+    width: 100%; /* 使主容器占满整个页面 */
+}
 .container {
     background-color: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
@@ -25,27 +28,37 @@ body {
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.result-container {
+    max-height: 200px; /* 设置最大高度 */
+    overflow-y: auto; /* 添加垂直滚动条 */
+    margin-top: 15px; /* 从输入框和按钮的间隔 */
+    padding: 10px; /* 内边距 */
+    border: 1px solid #ddd; /* 边框样式 */
+    border-radius: 5px; /* 边角圆滑 */
+}
+
 .container:hover {
     transform: scale(1.02);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
+
 h1 {
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
-    color: #4CAF50; /* 增加颜色 */
+    color: #4CAF50;
 }
 
 .dns-container, .ip-container {
     display: flex;
-    align-items: center; /* 垂直居中对齐 */
-    margin-bottom: 15px; /* 与下面的元素之间留出空隙 */
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .dns-container input, .ip-container input {
-    flex: 1; /* 输入框占据剩余空间 */
-    margin-right: 10px; /* 输入框与按钮之间的间距 */
+    flex: 1;
+    margin-right: 10px;
 }
 
 input {
@@ -59,8 +72,8 @@ input {
 }
 
 input:focus {
-    border-color: #4CAF50; /* 聚焦时边框颜色 */
-    outline: none; /* 去掉默认边框 */
+    border-color: #4CAF50;
+    outline: none;
 }
 
 button {
@@ -76,15 +89,18 @@ button {
 
 button:hover {
     background-color: #45a049;
-    transform: scale(1.05); /* 鼠标悬停放大效果 */
 }
 
 .clearBtn {
-    background-color: #f44336; /* 删除按钮为红色 */
+    background-color: #f44336;
 }
 
 .clearBtn:hover {
-    background-color: #e53935; /* 更深的红色 */
+    background-color: #e53935;
+}
+
+button:active {
+    transform: scale(0.95); /* 按钮点击效果 */
 }
 
 .error {
@@ -114,4 +130,39 @@ button:hover {
 #loading, #error {
     text-align: center;
     margin-top: 10px;
+}
+
+/* 媒体查询 - 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;  /* 在小屏设备上宽度为90% */
+        padding: 20px; /* 减少内边距 */
+    }
+
+    h1 {
+        font-size: 20px; /* 减小标题字体大小 */
+    }
+
+    button {
+        font-size: 14px; /* 减小按钮字体大小 */
+    }
+
+    input {
+        font-size: 14px; /* 减小输入框字体大小 */
+    }
+}
+
+/* 深色模式 */
+body.dark-mode {
+    background: #333; /* 深色背景 */
+    color: white; /* 文字颜色变为白色 */
+}
+
+.container.dark-mode {
+    background-color: rgba(255, 255, 255, 0.2); /* 更适合深色背景 */
+    color: white; /* 文字颜色变为白色 */
+}
+
+.clearBtn.dark-mode {
+    background-color: #e53935; /* 调整删除按钮颜色 */
 }
