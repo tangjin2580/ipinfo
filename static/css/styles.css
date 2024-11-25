@@ -3,7 +3,10 @@ body {
     padding: 20px;
     margin: 0;
     height: 100vh;
-    background: url('https://img.xjh.me/random_img.php') no-repeat center center fixed;
+    width:100%;
+    background: url(https://picsum.photos/1920/1080/?random) no-repeat;
+    -moz-background-size: cover;    /*背景图片拉伸以铺满全屏*/
+    -webkit-background-size: cover;
     background-size: cover;
     display: flex;
     flex-direction: column;
