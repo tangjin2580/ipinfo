@@ -1,4 +1,3 @@
-/* Embed CSS for easy access */
 body {
     font-family: 'Arial', sans-serif;
     padding: 20px;
@@ -14,9 +13,9 @@ body {
     color: #333;
 }
 .main-container {
-    display: flex; /* 主容器使用 Flexbox 排列两个子容器 */
-    justify-content: space-between; /* 在主容器间隔开来 */
-    width: 100%; /* 使主容器占满整个页面 */
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 .container {
     background-color: rgba(255, 255, 255, 0.95);
@@ -29,7 +28,10 @@ body {
 }
 
 .result-container {
-    max-height: 200px; /* 设置最大高度 */
+    display: flex;
+    flex-wrap: wrap; /* 允许换行 */
+    justify-content: space-between; /* 子元素之间的间距 */
+    max-height: 300px; /* 设置最大高度 */
     overflow-y: auto; /* 添加垂直滚动条 */
     margin-top: 15px; /* 从输入框和按钮的间隔 */
     padding: 10px; /* 内边距 */
@@ -37,11 +39,19 @@ body {
     border-radius: 5px; /* 边角圆滑 */
 }
 
+.result-item {
+    flex: 1 1 calc(33.333% - 10px); /* 每个盒子占据三分之一的宽度 */
+    margin-bottom: 10px; /* 盒子之间的底部间距 */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .container:hover {
     transform: scale(1.02);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
-
 
 h1 {
     font-size: 24px;
@@ -135,34 +145,34 @@ button:active {
 /* 媒体查询 - 响应式设计 */
 @media (max-width: 768px) {
     .container {
-        width: 90%;  /* 在小屏设备上宽度为90% */
-        padding: 20px; /* 减少内边距 */
+        width: 90%;
+        padding: 20px;
     }
 
     h1 {
-        font-size: 20px; /* 减小标题字体大小 */
+        font-size: 20px;
     }
 
     button {
-        font-size: 14px; /* 减小按钮字体大小 */
+        font-size: 14px;
     }
 
     input {
-        font-size: 14px; /* 减小输入框字体大小 */
+        font-size: 14px;
     }
 }
 
 /* 深色模式 */
 body.dark-mode {
-    background: #333; /* 深色背景 */
-    color: white; /* 文字颜色变为白色 */
+    background: #333;
+    color: white;
 }
 
 .container.dark-mode {
-    background-color: rgba(255, 255, 255, 0.2); /* 更适合深色背景 */
-    color: white; /* 文字颜色变为白色 */
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
 }
 
 .clearBtn.dark-mode {
-    background-color: #e53935; /* 调整删除按钮颜色 */
+    background-color: #e53935;
 }

@@ -100,3 +100,58 @@ document.getElementById('fetchBtn').addEventListener('click', async () => {
     const ipInput = document.getElementById('ipInput').value;
     await queryIP(ipInput); // 查询域名或 IP
 });
+
+function clearDns() {
+    document.getElementById('dnsInput').value = ''; // 清空 DNS 输入框
+}
+
+function clearIp() {
+    document.getElementById('ipInput').value = ''; // 清空 IP 输入框
+}
+
+function displayResult(data) {
+    const resultContainer = document.getElementById('results');
+    const resultItem = document.createElement('div');
+    resultItem.classList.add('result-item'); // 添加样式类
+    resultItem.innerHTML = data; // 根据需要进行数据填充
+    resultContainer.appendChild(resultItem);
+}
+
+document.getElementById('fetchBtn').onclick = function() {
+    const ip = document.getElementById('ipInput').value;
+    // 这里应该添加实际的查询逻辑，调用后端 API
+    // 然后将结果通过 displayResult(data) 添加到结果容器
+
+    // 示例添加静态数据
+    displayResult(`查询结果内容 ${Math.random()}`); // 示例，用随机数模拟数据
+};
+
+document.getElementById('fetchBtn').onclick = function() {
+    const ip = document.getElementById('ipInput').value;
+
+    // 清空之前的结果
+    const resultContainer = document.getElementById('results');
+    resultContainer.innerHTML = '';
+
+    // 这里应该添加实际的查询逻辑，调用后端 API
+    // 然后将结果通过 displayResult(data) 添加到结果容器
+
+    // 示例添加静态数据
+    displayResult(`查询结果内容 ${Math.random()}`); // 示例，用随机数模拟数据
+};
+
+// 主题切换功能
+document.getElementById('themeToggle').onclick = function() {
+    const body = document.body;
+    const containers = document.querySelectorAll('.container');
+    body.classList.toggle('dark-mode');
+    containers.forEach(container => {
+        container.classList.toggle('dark-mode');
+    });
+
+    if (body.classList.contains('dark-mode')) {
+        body.style.backgroundImage = `url(https://api.suyanw.cn/api/ys.php)`;
+    } else {
+        body.style.backgroundImage = "url(https://picsum.photos/1920/1080/?random)";
+    }
+};
