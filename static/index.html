@@ -11,9 +11,30 @@
 <!-- 查询 IP 和域名的盒子 -->
 <div class="container">
     <h1>IP信息查询</h1>
-    接口地址：<input type="text" id="serverInput" value="http://192.168.0.105:8080" placeholder="输入后端服务器地址"/>
-    DNS地址：<input type="text" id="dnsInput" value="114.114.114.114" placeholder="输入您的自定义 DNS 服务器"/>
-    <input type="text" id="ipInput" placeholder="请输入IP地址或域名" />
+    接口地址：<input type="text" id="serverInput" value="http://127.0.0.1:8080" placeholder="输入后端服务器地址"/>
+
+    <div class="dns-container">
+        DNS地址：
+        <input type="text" id="dnsInput" list="dnsList" value="114.114.114.114" placeholder="输入您的自定义 DNS 服务器"/>
+        <button class="clearBtn" id="clearDnsBtn" onclick="clearDns()">删除</button>
+    </div>
+
+    <datalist id="dnsList">
+        <option value="8.8.8.8">Google DNS</option>
+        <option value="8.8.4.4">Google DNS</option>
+        <option value="1.1.1.1">Cloudflare DNS</option>
+        <option value="9.9.9.9">Quad9 DNS</option>
+        <option value="114.114.114.114">中国 DNS</option>
+        <option value="223.5.5.5">阿里云 DNS</option>
+        <option value="168.126.63.1">韩国 DNS</option>
+    </datalist>
+
+    <!-- IP 地址输入框及删除按钮 -->
+    <div class="ip-container">
+        <input type="text" id="ipInput" placeholder="请输入IP地址或域名" />
+        <button class="clearBtn" id="clearIpBtn" onclick="clearIp()">删除</button>
+    </div>
+
     <button id="fetchBtn">查询信息</button>
     <p id="loading" style="display:none;">加载中...</p>
     <p id="error" class="error" style="display:none;"></p>
@@ -23,7 +44,6 @@
 <!-- 显示本地信息的盒子 -->
 <div class="container">
     <h1>本地信息</h1>
-<!--    <p>本地IP地址: <span id="localIP"></span></p>-->
     <h1>IP and Location</h1>
     <p id="ip"></p>
     <p id="location"></p>
@@ -33,5 +53,14 @@
 <!-- 引用 JS 文件 -->
 <script src="js/location.js"></script>
 <script src="js/script.js"></script> <!-- 引用 JS 文件 -->
+<script>
+    function clearDns() {
+        document.getElementById('dnsInput').value = ''; // 清空 DNS 输入框
+    }
+
+    function clearIp() {
+        document.getElementById('ipInput').value = ''; // 清空 IP 输入框
+    }
+</script>
 </body>
 </html>
