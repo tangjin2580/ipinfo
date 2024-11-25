@@ -11,6 +11,7 @@ body {
     justify-content: center;
     color: #333;
 }
+
 .container {
     background-color: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
@@ -18,16 +19,32 @@ body {
     width: 350px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     margin-bottom: 20px;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .container:hover {
     transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
+
 h1 {
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
+    color: #4CAF50; /* 增加颜色 */
 }
+
+.dns-container, .ip-container {
+    display: flex;
+    align-items: center; /* 垂直居中对齐 */
+    margin-bottom: 15px; /* 与下面的元素之间留出空隙 */
+}
+
+.dns-container input, .ip-container input {
+    flex: 1; /* 输入框占据剩余空间 */
+    margin-right: 10px; /* 输入框与按钮之间的间距 */
+}
+
 input {
     width: 100%;
     padding: 10px;
@@ -35,7 +52,14 @@ input {
     border-radius: 5px;
     margin-bottom: 15px;
     font-size: 16px;
+    transition: border-color 0.3s;
 }
+
+input:focus {
+    border-color: #4CAF50; /* 聚焦时边框颜色 */
+    outline: none; /* 去掉默认边框 */
+}
+
 button {
     padding: 10px;
     background-color: #4CAF50;
@@ -44,13 +68,33 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
+
 button:hover {
     background-color: #45a049;
+    transform: scale(1.05); /* 鼠标悬停放大效果 */
 }
-.error { color: red; text-align: center; }
-.clock { font-size: 18px; color: #007BFF; margin-top: 10px; }
+
+.clearBtn {
+    background-color: #f44336; /* 删除按钮为红色 */
+}
+
+.clearBtn:hover {
+    background-color: #e53935; /* 更深的红色 */
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+.clock {
+    font-size: 18px;
+    color: #007BFF;
+    margin-top: 10px;
+}
+
 .ip-info-box {
     margin-top: 10px;
     padding: 15px;
@@ -59,6 +103,12 @@ button:hover {
     background-color: rgba(0, 123, 255, 0.1);
     transition: box-shadow 0.3s;
 }
+
 .ip-info-box:hover {
     box-shadow: 0 4px 15px rgba(0, 83, 255, 0.3);
+}
+
+#loading, #error {
+    text-align: center;
+    margin-top: 10px;
 }
