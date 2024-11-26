@@ -32,7 +32,7 @@ jobs:
         IPINFO_TOKEN: ${{ secrets.IPINFO_TOKEN }}  # 确保设置了 IPINFO_TOKEN
 
     - name: Upload the packaged application
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # 更新为 v3
       with:
         name: packaged-app
         path: dist/app  # 生成可执行文件的路径
