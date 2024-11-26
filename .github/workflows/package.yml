@@ -1,0 +1,38 @@
+name: Pylint and Package
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint pyinstaller
+
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
+
+    - name: Package the application with PyInstaller
+      run: |
+        pyinstaller --onefile --add-data "ipinfo/server/.env:." ipinfo/server/app.py
+      env:
+        IPINFO_TOKEN: ${{ secrets.IPINFO_TOKEN }}  # 确保设置了 IPINFO_TOKEN
+
+    - name: Upload the packaged application
+      uses: actions/upload-artifact@v2
+      with:
+        name: packaged-app
+        path: dist/app  # 生成可执行文件的路径
