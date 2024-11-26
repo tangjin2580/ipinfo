@@ -27,7 +27,7 @@ jobs:
 
     - name: Package the application with PyInstaller
       run: |
-        pyinstaller --onefile --add-data "ipinfo/server/.env:." ipinfo/server/app.py
+         pyinstaller --onefile --add-data "./server/.env:." ./server/app.py
       env:
         IPINFO_TOKEN: ${{ secrets.IPINFO_TOKEN }}  # 确保设置了 IPINFO_TOKEN
 
