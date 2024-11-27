@@ -9,7 +9,7 @@ services:
     networks:
       - app_network  # 加入网络
     environment:
-      - IPINFO_TOKEN=dfb22de0d433e0  # 传递环境变量到 Flask 应用
+      - IPINFO_TOKEN=你自己的token  # 传递环境变量到 Flask 应用
 
   nginx:
     build:
