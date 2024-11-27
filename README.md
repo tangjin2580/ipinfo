@@ -40,7 +40,7 @@ pyinstaller --onefile --add-data "./server/.env:." ./server/app.py
 - 国内拉取镜像过慢，可手动复制下面的链接拉取
 
 ```shell
-docker pull crpi-soc4lkdq4i3mrdfh.cn-chengdu.personal.cr.aliyuncs.com/mydokcer/ipinfo-flask
+docker pull crpi-soc4lkdq4i3mrdfh.cn-chengdu.personal.cr.aliyuncs.com/mydokcer/ipinfo-flask && \
 docker pull crpi-soc4lkdq4i3mrdfh.cn-chengdu.personal.cr.aliyuncs.com/mydokcer/ipinfo-nginx
 ```
 
