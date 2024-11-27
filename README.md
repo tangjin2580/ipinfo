@@ -21,6 +21,7 @@ http://127.0.0.1:80/
 ```
 <h2>二、打包运行</h2>
 - 打包
+
 ```ssh
 pyinstaller --onefile --add-data "./server/.env:." ./server/app.py
 ```
@@ -28,19 +29,27 @@ pyinstaller --onefile --add-data "./server/.env:." ./server/app.py
   - linux/macos
     - ```ssh
       ./server/dist/app
+      ```
   - windows
     - ```cmd
        ./server/dist/app.exe
+      ```
       
 <h2>三、Docker运行</h2>
 - 构建镜像
 ```ssh
 docker build -t ipinfo-api .
 ```
+
 - 运行容器
 ```ssh
 docker run -p 8080:8080 ipinfo-api
 ``` 
+- 停止容器
+```ssh
+docker stop ipinfo-api
+```
+
 - 访问接口  
 ```ssh        
 http://127.0.0.1:8080/ipinfo?ip=8.8.8.8
