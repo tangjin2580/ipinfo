@@ -1,0 +1,27 @@
+services:
+  flask:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: python_builder  # 指定要构建的阶段
+    ports:
+      - "8080:8080"
+    networks:
+      - app_network  # 加入网络
+    environment:
+      - IPINFO_TOKEN=dfb22de0d433e0  # 传递环境变量到 Flask 应用
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: nginx_builder  # 使用 Nginx 的构建阶段
+    ports:
+      - "80:80"
+    depends_on:
+      - flask  # 确保 Flask 服务先启动
+    networks:
+      - app_network  # 加入同一网络
+
+networks:
+  app_network:  # 创建一个自定义网络
