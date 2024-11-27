@@ -32,4 +32,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: packaged-app
-          path: dist/app  # 生成可执行文件的路径
+          path: server/dist/app  # 生成可执行文件的路径
