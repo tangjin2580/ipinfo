@@ -2,10 +2,49 @@
 <h2>一、环境准备</h2>
 
 - 安装python3.9+
+- 激活虚拟环境
+```shell
+# 确保激活虚拟环境
+
+#创建虚拟环境
+
+python3 -m venv venv
+
+source /opt/ipinfo-main/venv/bin/activate
+
+# 切换到包含 app.py 的目录
+cd /opt/ipinfo-main/server
+
+# 启动 Gunicorn
+gunicorn app:app -b 0.0.0.0:8080 --workers 4 --pid gunicorn.pid
+
+#或者
+nohup python -m flask run --host=0.0.0.0 --port=8080 > flask.log 2>&1 & echo $! > flask.pid
+
+```
+
+查看日志： 你可以使用以下命令查看日志文件中的输出：
+```shell
+tail -f flask.log
+```
+
+
+查看 PID： 可以通过文件来查看当前运行的 Flask 进程 ID。
+
+```shell
+cat flask.pid
+```
 - 安装依赖包
 ```ssh
 pip install -r requirements.txt
 ```
+
+结束进程
+如果需要停止 Flask 应用，可以使用以下命令：
+```ssh
+kill $(cat flask.pid)
+```
+
 ## 运行
 - 启动服务
 ```ssh

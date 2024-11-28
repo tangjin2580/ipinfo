@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# 获取当前脚本所在的目录
-# source venv/bin/activate
-# pip install -r requirements.txt
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 激活虚拟环境
