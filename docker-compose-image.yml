@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  flask:
+    image: crpi-soc4lkdq4i3mrdfh.cn-chengdu.personal.cr.aliyuncs.com/mydokcer/ipinfo-flask  # 更新后的镜像
+    ports:
+      - "8080:8080"
+    networks:
+      - ipinfo_network
+    environment:
+      - IPINFO_TOKEN=dfb22de0d433e0  # 可根据需要设置
+
+  nginx:
+    image: crpi-soc4lkdq4i3mrdfh.cn-chengdu.personal.cr.aliyuncs.com/mydokcer/ipinfo-nginx  # 更新后的镜像
+    ports:
+      - "80:80"
+    depends_on:
+      - flask
+    networks:
+      - ipinfo_network
+
+networks:
+  ipinfo_network:
