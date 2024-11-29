@@ -6,15 +6,28 @@ import requests
 import dns.resolver
 import os
 import logging
+from logging.handlers import TimedRotatingFileHandler
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
+from country_mapping import get_country_name  # 字典映射
+from cachetools import TTLCache
+from datetime import datetime
 
 # 加载环境变量
 load_dotenv()
 
-# 设置日志记录
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# 创建时间戳
+timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+log_file_path = f'../log/app_{timestamp}.log'  # 日志文件保存在上级目录，并加上时间戳
+
+# 设置日志文件路径以及分割配置
+handler = TimedRotatingFileHandler(log_file_path, when="midnight", interval=1, backupCount=7)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+
+# 设置根日志记录器
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
 
 app = Flask(__name__)
 CORS(app)
@@ -31,6 +44,9 @@ TOKEN = os.getenv('IPINFO_TOKEN')
 
 # 使用线程池最大工作线程数
 executor = ThreadPoolExecutor(max_workers=5)
+
+# 初始化缓存，设置最大容量和有效期（一天）
+cache = TTLCache(maxsize=1000, ttl=86400)  # 86400 秒 = 1 天
 
 
 @app.route('/api/ipinfo/<string:input>', methods=['GET'])
@@ -50,16 +66,25 @@ def ip_info(input):
 
     logger.info(f'Resolved IP(s): {ips} for input: {input}')
 
-    # 使用线程池并行查询 IP 信息
-    futures = {executor.submit(get_ip_info, ip): ip for ip in ips}
-    for future in futures:
-        ip = futures[future]
-        try:
-            data = future.result()
-            if data is not None:
-                all_ip_info.append(data)
-        except Exception as e:
-            logger.error(f'Error fetching info for {ip}: {str(e)}')
+    # 检查缓存
+    for ip in ips:
+        if ip in cache:
+            logger.info(f'Fetching {ip} from cache')
+            all_ip_info.append(cache[ip])
+        else:
+            # 使用线程池并行查询 IP 信息
+            futures = {executor.submit(get_ip_info, ip): ip for ip in ips if ip not in cache}
+
+            for future in futures:
+                ip = futures[future]
+                try:
+                    data = future.result()
+                    if data is not None:
+                        all_ip_info.append(data)
+                        cache[ip] = data  # 将结果存入缓存
+                        logger.info(f'Cached data for {ip}: {data}')  # 缓存成功的日志
+                except Exception as e:
+                    logger.error(f'Error fetching info for {ip}: {str(e)}')
 
     if not all_ip_info:
         logger.warning(f'No data found for IP(s): {ips}')
@@ -74,6 +99,11 @@ def get_ip_info(ip):
         response.raise_for_status()
         data = response.json()
         logger.info(f'Successfully retrieved info for {ip}: {data}')
+
+        # 使用映射函数获取中文国家名称
+        country_code = data.get('country')
+        data['country'] = get_country_name(country_code)  # 替换为中文名称
+
         return data
     except requests.exceptions.RequestException as e:
         logger.error(f'Error fetching info for {ip}: {str(e)}')
@@ -105,6 +135,13 @@ def resolve_domain_api(domain):
         return {'ip': ips}
     logger.warning(f'Failed to resolve domain: {domain} with DNS: {dns_server}')
     return jsonify({'error': '未找到解析结果'}), 404
+
+
+@app.route('/api/clear-cache', methods=['POST'])
+def clear_cache():
+    cache.clear()
+    logger.info('Cache has been cleared.')
+    return jsonify({'message': '缓存已清理'}), 200
 
 
 if __name__ == '__main__':
