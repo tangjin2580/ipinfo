@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from country_mapping import get_country_name  # 字典映射
 from cachetools import TTLCache
 from datetime import datetime
+import json
 
 # 加载环境变量
 load_dotenv()
@@ -66,6 +67,9 @@ def ip_info(input):
 
     logger.info(f'Resolved IP(s): {ips} for input: {input}')
 
+    # 新增变量用于存储解析的域名
+    history_domain = input if input.count('.') != 3 else None
+
     # 检查缓存
     for ip in ips:
         if ip in cache:
@@ -83,6 +87,13 @@ def ip_info(input):
                         all_ip_info.append(data)
                         cache[ip] = data  # 将结果存入缓存
                         logger.info(f'Cached data for {ip}: {data}')  # 缓存成功的日志
+
+                        # 如果是通过域名查询的，记录域名
+                        if history_domain:
+                            country_code = data.get('country')
+                            country_name = get_country_name(country_code)  # 获取中文国家名称
+                            save_query_history(history_domain, ip, dns_server, country_name)
+
                 except Exception as e:
                     logger.error(f'Error fetching info for {ip}: {str(e)}')
 
@@ -137,6 +148,55 @@ def resolve_domain_api(domain):
     return jsonify({'error': '未找到解析结果'}), 404
 
 
+# 历史记录文件路径
+history_file_path = '../log/query_history.json'
+
+
+# 保存查询历史记录
+def save_query_history(domain, ip, dns_server, country):
+    query_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    history_entry = {
+        'domain': domain,
+        'ip': ip,
+        'dns': dns_server,
+        'country': country,
+        'timestamp': query_time
+    }
+
+    # 尝试读取已有历史记录
+    try:
+        if os.path.exists(history_file_path):
+            with open(history_file_path, 'r') as f:
+                history = json.load(f)
+        else:
+            history = []
+
+        # 添加新的记录
+        history.append(history_entry)
+
+        # 保存到文件
+        with open(history_file_path, 'w') as f:
+            json.dump(history, f, ensure_ascii=False, indent=4)
+
+        logger.info(f'Saved query history: {history_entry}')
+    except Exception as e:
+        logger.error(f'Error saving query history: {str(e)}')
+
+
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    try:
+        if os.path.exists(history_file_path):
+            with open(history_file_path, 'r') as f:
+                history = json.load(f)
+            return jsonify(history)
+        else:
+            return jsonify([])  # 如果没有历史记录，返回空列表
+    except Exception as e:
+        logger.error(f'Error reading query history: {str(e)}')
+        return jsonify({'error': '读取历史记录失败'}), 500
+
+
 @app.route('/api/clear-cache', methods=['POST'])
 def clear_cache():
     cache.clear()
@@ -145,4 +205,4 @@ def clear_cache():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080, debug=True)
