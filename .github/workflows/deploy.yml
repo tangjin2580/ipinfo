@@ -35,6 +35,11 @@ jobs:
         pyinstaller -F --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
         ls -la dist  # 列出 dist 目录中的文件以确认生成的文件
 
+    - name: 确认可执行文件存在
+      run: |
+        echo "Checking for the executable at: $GITHUB_WORKSPACE/server/dist/app/app"
+        ls -la $GITHUB_WORKSPACE/server/dist/app/  # 查看生成的文件
+    
     - name: 创建 Release
       id: create_release
       uses: actions/create-release@v1
@@ -50,7 +55,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: $GITHUB_WORKSPACE/server/dist/app/app  # 指向实际的可执行文件
+        asset_path: $GITHUB_WORKSPACE/server/dist/app/app  # 确保这个路径指向实际的可执行文件
         asset_name: app  # 这里仍然保持与实际文件名相同
         asset_content_type: application/octet-stream  # 设置文件内容类型
       env:
