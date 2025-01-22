@@ -11,3 +11,7 @@ cd "$SCRIPT_DIR/server" || { echo "无法进入 server 目录"; exit 1; }
 # 启动 Flask 应用程序使用 Gunicorn
 echo "启动 Flask 应用程序..."
 gunicorn app:app -b 0.0.0.0:8080 --workers 4 --pid gunicorn.pid &
+@echo off
+setlocal enabledelayedexpansion
+endlocal
+pause

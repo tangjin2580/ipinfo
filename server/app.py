@@ -94,6 +94,11 @@ def ip_info(input):
                             country_name = get_country_name(country_code)  # 获取中文国家名称
                             save_query_history(history_domain, ip, dns_server, country_name)
 
+                        # 解析其它 IP 地址的信息（国家和地址）
+                        address_info = get_ip_info(ip)
+                        if address_info:
+                            all_ip_info[-1].update(address_info)  # 更新当前 IP 信息
+
                 except Exception as e:
                     logger.error(f'Error fetching info for {ip}: {str(e)}')
 
@@ -143,7 +148,7 @@ def resolve_domain_api(domain):
     logger.info(f'Resolving domain: {domain} using DNS: {dns_server}')
     ips = resolve_domain(domain, dns_server)
     if ips:
-        return {'ip': ips}
+        return jsonify({'ip': ips})
     logger.warning(f'Failed to resolve domain: {domain} with DNS: {dns_server}')
     return jsonify({'error': '未找到解析结果'}), 404
 
@@ -154,7 +159,7 @@ history_file_path = '../log/query_history.json'
 
 # 保存查询历史记录
 def save_query_history(domain, ip, dns_server, country):
-    query_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    query_time = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
     history_entry = {
         'domain': domain,
         'ip': ip,
@@ -205,4 +210,4 @@ def clear_cache():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=False)
