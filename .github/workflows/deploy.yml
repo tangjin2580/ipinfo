@@ -17,7 +17,7 @@ jobs:
     - name: 设置 Python 环境
       uses: actions/setup-python@v3
       with:
-        python-version: 3.8  # 指定 Python 版本
+        python-version: 3.9  # 指定 Python 版本为 3.9
 
     - name: 安装依赖
       run: |
