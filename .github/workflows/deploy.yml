@@ -12,10 +12,10 @@ jobs:
 
     steps:
     - name: 检出代码
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: 设置 Python 环境
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: 3.8  # 指定 Python 版本
 
@@ -31,7 +31,7 @@ jobs:
       run: pyinstaller -F --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
 
     - name: 上传打包文件为 artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ipinfo-flask-app
         path: dist/app  # 这里假设 PyInstaller 生成的文件名为 app
