@@ -3,14 +3,14 @@ name: 部署 Flask 应用
 on:
   push:
     branches:
-      - main  # 当 main 分支有新的推送时触发工作流
-  workflow_dispatch:  # 允许手动触发工作流
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 设置权限，允许写入内容，例如创建 Release
+      contents: write
 
     steps:
     - name: 检出代码
@@ -19,7 +19,7 @@ jobs:
     - name: 设置 Python 环境
       uses: actions/setup-python@v3
       with:
-        python-version: 3.9  # 指定 Python 版本为 3.9
+        python-version: 3.9
 
     - name: 安装依赖
       run: |
@@ -31,9 +31,9 @@ jobs:
 
     - name: 打包 Flask 应用
       run: |
-        cd $GITHUB_WORKSPACE/server  # 确保在包含 app.py 的目录下
+        cd $GITHUB_WORKSPACE/server
         pyinstaller -F --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
-        ls -la dist  # 列出 dist 目录中的文件以确认生成的文件
+        ls -la dist
 
     - name: 检查可执行文件是否存在
       run: |
@@ -53,20 +53,25 @@ jobs:
         draft: false
         prerelease: false
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 验证 dist 目录
+      run: |
+        echo "当前路径: $GITHUB_WORKSPACE/server/dist"
+        ls -la $GITHUB_WORKSPACE/server/dist/
 
     - name: 上传打包容件到 Release
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: $GITHUB_WORKSPACE/server/dist/app  # 确保这个路径指向实际的可执行文件
-        asset_name: app  # 确保名称与生成文件一致
-        asset_content_type: application/octet-stream  # 设置文件内容类型
+        asset_path: ${{ github.workspace }}/server/dist/app  # 使用环境变量
+        asset_name: app
+        asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 上传打包文件为 artifact
       uses: actions/upload-artifact@v3
       with:
         name: ipinfo-flask-app
-        path: $GITHUB_WORKSPACE/server/dist/app  # 确保路径正确
+        path: ${{ github.workspace }}/server/dist/app
