@@ -75,7 +75,6 @@ jobs:
     - name: 获取当前版本号
       id: get_version
       run: |
-        # 检查现有的 Git 标签，匹配语义化版本号
         current_version=$(git tag | grep '^v[0-9]\+\.[0-9]\+\.[0-9]\+$' | sort -V | tail -n 1 || echo "v0.0.0")
         version_prefix=${current_version%.*}
         version_suffix=${current_version##*.}
@@ -83,16 +82,13 @@ jobs:
         new_version="${version_prefix}.${new_version_suffix}"
         echo "new_version=$new_version" >> $GITHUB_ENV
         echo "生成的新版本号: $new_version"
-    
 
-    - name: 检查是否已经存在 Release
-      id: check_release
+    - name: 验证版本号
       run: |
-        if git tag | grep -q "${{ env.new_version }}"; then
-          echo "Release ${{ env.new_version }} 已存在."
-          echo "skip_release=true" >> $GITHUB_ENV
-        else
-          echo "skip_release=false" >> $GITHUB_ENV
+        echo "生成的版本号: ${{ env.new_version }}"
+        if [[ ! "${{ env.new_version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "版本号格式不正确: ${{ env.new_version }}"
+          exit 1
         fi
 
     - name: 创建 Release
@@ -100,12 +96,13 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ env.new_version }}  # 使用语义化版本号
-        release_name: ${{ env.new_version }}  # 使用语义化版本号
+        tag_name: ${{ env.new_version }}
+        release_name: ${{ env.new_version }}
         draft: false
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
     - name: 验证版本号
       run: |
