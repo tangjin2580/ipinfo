@@ -75,21 +75,25 @@ jobs:
     - name: 获取当前版本号
       id: get_version
       run: |
-        current_version=$(git tag | grep '^v[0-9]\+\.[0-9]\+\.[0-9]\+$' | sort -V | tail -n 1 || echo "v0.0.0")
-        version_prefix=${current_version%.*}
-        version_suffix=${current_version##*.}
-        new_version_suffix=$((version_suffix + 1))
-        new_version="${version_prefix}.${new_version_suffix}"
-        echo "new_version=$new_version" >> $GITHUB_ENV
-        echo "生成的新版本号: $new_version"
+        # 获取现有版本标签，按语义化版本号排序
+        current_version=$(git tag | grep '^v[0-9]\+\.[0-9]\+$' | sort -V | tail -n 1 || echo "v0.0")
+        version_prefix=${current_version%.*}   # 提取前缀，例如 v0
+        version_suffix=${current_version##*.} # 提取后缀，例如 0
+        new_version_suffix=$((version_suffix + 1))  # 后缀递增
+        new_version="v${version_prefix#v}.$new_version_suffix"  # 拼接出新的版本号
+        echo "new_version=$new_version" >> $GITHUB_ENV  # 写入环境变量
+        echo "生成的新版本号: $new_version"  # 输出版本号
+    
 
     - name: 验证版本号格式
       run: |
         echo "生成的版本号: ${{ env.new_version }}"
-        if [[ ! "${{ env.new_version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        if [[ ! "${{ env.new_version }}" =~ ^v[0-9]+\.[0-9]+$ ]]; then
           echo "版本号格式不正确: ${{ env.new_version }}"
           exit 1
         fi
+    
+    
 
     - name: 检查是否已经存在 Release
       id: check_release
@@ -100,6 +104,7 @@ jobs:
         else
           echo "skip_release=false" >> $GITHUB_ENV
         fi
+    
 
     - name: 创建 Release
       if: env.skip_release == 'false'
@@ -112,6 +117,7 @@ jobs:
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 
     - name: 验证 dist 目录
