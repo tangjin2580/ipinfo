@@ -33,13 +33,14 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/server  # 确保在包含 app.py 的目录下
         pyinstaller -F --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
+        ls -la dist  # 列出 dist 目录中的文件以确认生成的文件
 
     - name: 创建 Release
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: release-${{ github.ref }}  # 使用完整的引用作为标签名称
-        release_name: Release ${{ github.ref }}  # 使用完整的引用作为发布名称
+        tag_name: release-${{ github.sha }}
+        release_name: Release ${{ github.sha }}
         draft: false
         prerelease: false
       env:
@@ -49,8 +50,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: $GITHUB_WORKSPACE/server/dist/app  # 确保路径正确
-        asset_name: app  # 设置上传的文件名
+        asset_path: $GITHUB_WORKSPACE/server/dist/app  # 更新为正确的路径，例如 dist/app
+        asset_name: app  # 确保这是生成的可执行文件的名称
         asset_content_type: application/octet-stream  # 设置文件内容类型
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
