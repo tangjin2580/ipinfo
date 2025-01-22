@@ -3,30 +3,30 @@ name: 部署 Flask 应用
 on:
   push:
     branches:
-      - index
-  workflow_dispatch:
+      - index  # 当 index 分支有新的推送时触发工作流
+  workflow_dispatch:  # 允许手动触发工作流
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write  # 设置权限，允许写入内容，例如创建 Release
 
     steps:
     - name: 检出代码
       uses: actions/checkout@v3
-      
+
     - name: 设置 Python 环境
       uses: actions/setup-python@v3
       with:
-        python-version: 3.9
+        python-version: 3.9  # 指定 Python 版本为 3.9
 
     - name: 安装依赖
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: 安装静态链接依赖
+    - name: 安装静态链接所需依赖
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
@@ -38,22 +38,26 @@ jobs:
         wget https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz
         tar -xzf Python-3.9.7.tgz
         cd Python-3.9.7
-        ./configure --enable-shared --enable-static
+        ./configure --enable-shared --enable-static --with-pymalloc  # 启用静态库支持
         make
-        sudo make altinstall
+        sudo make altinstall  # 使用 altinstall 避免覆盖系统 Python
+
+    - name: 验证静态库
+      run: |
+        ls /usr/local/lib/python3.9/config-3.9m/  # 确认静态库文件存在
 
     - name: 设置新的 Python 路径
-      run: echo "PYTHON_LOCATION=/usr/local/bin/python3.9" >> $GITHUB_ENV  # 正确设置新的 Python 可执行文件路径
+      run: echo "PYTHON_LOCATION=/usr/local/bin/python3.9" >> $GITHUB_ENV  # 设置新 Python 可执行路径
 
     - name: 安装 PyInstaller
       run: ${{ env.PYTHON_LOCATION }} -m pip install pyinstaller
 
     - name: 打包 Flask 应用
       run: |
-        cd $GITHUB_WORKSPACE/server
-        ${{ env.PYTHON_LOCATION }} -m PyInstaller -F --add-binary '/usr/local/lib/python3.9/config-3.9m-x86_64-linux-gnu/libpython3.9.a:.' \
+        cd $GITHUB_WORKSPACE/server  # 确保在包含 app.py 的目录下
+        ${{ env.PYTHON_LOCATION }} -m PyInstaller -F --add-binary '/usr/local/lib/python3.9/config-3.9m/libpython3.9.a:.' \
         --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
-        ls -la dist
+        ls -la dist  # 列出 dist 目录中的文件以确认生成的文件
 
     - name: 检查可执行文件是否存在
       run: |
@@ -67,15 +71,15 @@ jobs:
     - name: 获取当前版本号
       id: get_version
       run: |
-        current_version=$(git tag | grep version_ | sort -V | tail -n 1)
+        current_version=$(git tag | grep version_ | sort -V | tail -n 1)  # 获取最新的版本号
         if [ -z "$current_version" ]; then
-          current_version="version_0.0"
+          current_version="version_0.0"  # 如果没有版本则初始化为 version_0.0
         fi
         version_prefix=${current_version%.*}
         version_suffix=${current_version#*.}
         new_version_suffix=$((version_suffix + 1))
         new_version="$version_prefix.$new_version_suffix"
-        echo "new_version=$new_version" >> $GITHUB_ENV
+        echo "new_version=$new_version" >> $GITHUB_ENV  # 将新版本号写入环境变量
 
     - name: 检查是否已经存在 Release
       id: check_release
@@ -92,12 +96,12 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ env.new_version }}
-        release_name: ${{ env.new_version }}
+        tag_name: ${{ env.new_version }}  # 使用新版本号
+        release_name: ${{ env.new_version }}  # 使用新版本号
         draft: false
         prerelease: false
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
 
     - name: 验证 dist 目录
       run: |
@@ -106,7 +110,7 @@ jobs:
 
     - name: 设置当前日期时间
       id: datetime
-      run: echo "current_datetime=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_ENV
+      run: echo "current_datetime=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_ENV  # 设置当前时间到环境变量
 
     - name: 上传打包容件到 Release
       if: env.skip_release == 'false'
@@ -114,13 +118,13 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ${{ github.workspace }}/server/dist/app
-        asset_name: app_${{ env.current_datetime }}
-        asset_content_type: application/octet-stream
+        asset_name: app_${{ env.current_datetime }}  # 将时间戳加入到文件名中
+        asset_content_type: application/octet-stream  # 设置资产的内容类型
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
 
     - name: 上传打包文件为 artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ipinfo-flask-app_${{ env.current_datetime }}
+        name: ipinfo-flask-app_${{ env.current_datetime }}  # 将时间戳加入到 artifact 名称
         path: ${{ github.workspace }}/server/dist/app

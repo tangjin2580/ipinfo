@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # 复制 requirements.txt 到工作目录
-COPY requirements.txt ./requirements.txt
+COPY ../requirements.txt ./requirements.txt
 
 # 创建并激活虚拟环境，安装依赖
 RUN python3 -m venv venv \
