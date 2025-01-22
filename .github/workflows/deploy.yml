@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: 检出代码
       uses: actions/checkout@v3
-
+      
     - name: 设置 Python 环境
       uses: actions/setup-python@v3
       with:
@@ -44,12 +44,22 @@ jobs:
           exit 1
         fi
 
+    - name: 获取当前版本号
+      id: get_version
+      run: |
+        current_version=$(git tag | sort -V | tail -n 1)  # 获取最新版本号
+        if [ -z "$current_version" ]; then
+          current_version="version_0.0"  # 如果没有版本则初始化为 version_0.0
+        fi
+        new_version=$(echo "$current_version" | awk -F. -v OFS=. '{$NF += 1; print}')  # 增加小版本号
+        echo "new_version=$new_version" >> $GITHUB_ENV  # 将新版本号写入环境变量
+
     - name: 创建 Release
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: release-${{ github.sha }}
-        release_name: Release ${{ github.sha }}
+        tag_name: ${{ env.new_version }}  # 使用新版本号
+        release_name: ${{ env.new_version }}  # 使用新版本号
         draft: false
         prerelease: false
       env:
