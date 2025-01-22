@@ -38,7 +38,7 @@ jobs:
         wget https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz
         tar -xzf Python-3.9.7.tgz
         cd Python-3.9.7
-        ./configure --enable-shared --enable-static --with-pymalloc  # 启用静态链接
+        ./configure --enable-shared --enable-static --with-pymalloc
         make
         sudo make altinstall  # 使用 altinstall 避免覆盖系统 Python
 
@@ -67,15 +67,15 @@ jobs:
     - name: 获取当前版本号
       id: get_version
       run: |
-        current_version=$(git tag | grep version_ | sort -V | tail -n 1)  # 获取最新的版本号
+        current_version=$(git tag | grep version_ | sort -V | tail -n 1)
         if [ -z "$current_version" ]; then
-          current_version="version_0.0"  # 如果没有版本则初始化为 version_0.0
+          current_version="version_0.0"
         fi
         version_prefix=${current_version%.*}
         version_suffix=${current_version#*.}
         new_version_suffix=$((version_suffix + 1))
         new_version="$version_prefix.$new_version_suffix"
-        echo "new_version=$new_version" >> $GITHUB_ENV  # 将新版本号写入环境变量
+        echo "new_version=$new_version" >> $GITHUB_ENV
 
     - name: 检查是否已经存在 Release
       id: check_release
@@ -97,7 +97,7 @@ jobs:
         draft: false
         prerelease: false
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 验证 dist 目录
       run: |
@@ -106,18 +106,18 @@ jobs:
 
     - name: 设置当前日期时间
       id: datetime
-      run: echo "current_datetime=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_ENV  # 设置当前时间到环境变量
+      run: echo "current_datetime=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_ENV
 
     - name: 上传打包容件到 Release
       if: env.skip_release == 'false'
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/server/dist/app  # 使用环境变量
-        asset_name: app_${{ env.current_datetime }}  # 将时间戳作为文件名的一部分
-        asset_content_type: application/octet-stream  # 设置文件内容类型
+        asset_path: ${{ github.workspace }}/server/dist/app
+        asset_name: app_${{ env.current_datetime }}
+        asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 上传打包文件为 artifact
       uses: actions/upload-artifact@v3
