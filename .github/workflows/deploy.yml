@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 设置权限，允许写入内容，例如创建 Release
 
     steps:
     - name: 检出代码
