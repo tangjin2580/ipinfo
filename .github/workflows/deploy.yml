@@ -34,7 +34,7 @@ jobs:
 
     - name: 创建 Release
       id: create_release
-      uses: actions/create-release@v3
+      uses: actions/create-release@v1
       with:
         tag_name: ${{ github.sha }}
         release_name: Release ${{ github.sha }}
@@ -42,7 +42,7 @@ jobs:
         prerelease: false
 
     - name: 上传打包容件到 Release
-      uses: actions/upload-release-asset@v2
+      uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: $GITHUB_WORKSPACE/dist/app  # 确保路径正确
