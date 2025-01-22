@@ -35,10 +35,14 @@ jobs:
         pyinstaller -F --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
         ls -la dist  # 列出 dist 目录中的文件以确认生成的文件
 
-    - name: 列出 dist 目录内容
+    - name: 检查可执行文件是否存在
       run: |
-        echo "Listing contents of the dist directory:"
-        ls -la $GITHUB_WORKSPACE/server/dist/  # 列出 dist 目录的内容
+        if [ -f "$GITHUB_WORKSPACE/server/dist/app" ]; then
+          echo "可执行文件存在，继续上传。"
+        else
+          echo "可执行文件不存在，请检查。"
+          exit 1
+        fi
 
     - name: 创建 Release
       id: create_release
