@@ -30,7 +30,7 @@ jobs:
     - name: 打包 Flask 应用
       run: |
         cd $GITHUB_WORKSPACE/server  # 确保在包含 app.py 的目录下
-        pyinstaller -F --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
+        pyinstaller -F --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping ./server/app.py
 
     - name: 创建 Release
       id: create_release
