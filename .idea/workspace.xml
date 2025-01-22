@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62186225-f381-47f4-9714-7cc820458270" name="更改" comment="release build">
+    <list default="true" id="62186225-f381-47f4-9714-7cc820458270" name="更改" comment="server/app.py">
       <change beforePath="$PROJECT_DIR$/.github/workflows/deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -267,7 +267,7 @@
       <workItem from="1736912695520" duration="1884000" />
       <workItem from="1737449547641" duration="762000" />
       <workItem from="1737510388981" duration="3539000" />
-      <workItem from="1737514738909" duration="8740000" />
+      <workItem from="1737514738909" duration="8842000" />
     </task>
     <task id="LOCAL-00001" summary="css/js">
       <option name="closed" value="true" />
@@ -565,7 +565,23 @@
       <option name="project" value="LOCAL" />
       <updated>1737526756046</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="release build">
+      <option name="closed" value="true" />
+      <created>1737526992028</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1737526992028</updated>
+    </task>
+    <task id="LOCAL-00042" summary="server/app.py">
+      <option name="closed" value="true" />
+      <created>1737527067220</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1737527067220</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -595,7 +611,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ubuntu" />
     <MESSAGE value="main" />
     <MESSAGE value="ububtu branch" />
     <MESSAGE value="location.js" />
@@ -620,7 +635,8 @@
     <MESSAGE value="history" />
     <MESSAGE value="release" />
     <MESSAGE value="release build" />
-    <option name="LAST_COMMIT_MESSAGE" value="release build" />
+    <MESSAGE value="server/app.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="server/app.py" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ipinfo$ipinfo.coverage" NAME="ipinfo 覆盖结果" MODIFIED="1732859283966" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
