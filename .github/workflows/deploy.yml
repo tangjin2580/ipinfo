@@ -3,14 +3,14 @@ name: 部署 Flask 应用
 on:
   push:
     branches:
-      - index  # 当 index 分支有新的推送时触发工作流
-  workflow_dispatch:  # 允许手动触发工作流
+      - index
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 设置权限，允许写入内容，例如创建 Release
+      contents: write
 
     steps:
     - name: 检出代码
@@ -19,7 +19,7 @@ jobs:
     - name: 设置 Python 环境
       uses: actions/setup-python@v3
       with:
-        python-version: 3.9  # 指定 Python 版本
+        python-version: 3.9
 
     - name: 安装依赖
       run: |
@@ -32,7 +32,6 @@ jobs:
         sudo apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
                                 libreadline-dev libsqlite3-dev wget curl llvm \
                                 libffi-dev liblzma-dev python3-openssl git
-        # 可根据需要安装更多依赖
 
     - name: 下载并安装静态 Python
       run: |
@@ -41,20 +40,20 @@ jobs:
         cd Python-3.9.7
         ./configure --enable-shared --enable-static
         make
-        sudo make altinstall  # 安装静态 Python，避免覆盖系统 Python
+        sudo make altinstall
 
-    - name: 设定新的 Python 路径
-      run: echo "/usr/local/bin/python3.9" >> $GITHUB_ENV  # 设置新的 Python 可执行文件路径为环境变量
+    - name: 设置新的 Python 路径
+      run: echo "PYTHON_LOCATION=/usr/local/bin/python3.9" >> $GITHUB_ENV  # 正确设置新的 Python 可执行文件路径
 
     - name: 安装 PyInstaller
-      run: /usr/local/bin/python3.9 -m pip install pyinstaller
+      run: ${{ env.PYTHON_LOCATION }} -m pip install pyinstaller
 
     - name: 打包 Flask 应用
       run: |
-        cd $GITHUB_WORKSPACE/server  # 确保在包含 app.py 的目录
-        /usr/local/bin/python3.9 -m PyInstaller -F --add-binary '/usr/local/lib/python3.9/config-3.9m-x86_64-linux-gnu/libpython3.9.a:.' \
+        cd $GITHUB_WORKSPACE/server
+        ${{ env.PYTHON_LOCATION }} -m PyInstaller -F --add-binary '/usr/local/lib/python3.9/config-3.9m-x86_64-linux-gnu/libpython3.9.a:.' \
         --hidden-import flask_cors --hidden-import requests --hidden-import dns.resolver --hidden-import country_mapping app.py
-        ls -la dist  # 列出 dist 目录中的文件以确认生成的文件
+        ls -la dist
 
     - name: 检查可执行文件是否存在
       run: |
