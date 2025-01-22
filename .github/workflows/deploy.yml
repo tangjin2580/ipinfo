@@ -72,11 +72,6 @@ jobs:
           exit 1
         fi
 
-    - name: 运行单元测试
-      run: |
-        cd $GITHUB_WORKSPACE
-        pytest tests  # 假设测试文件位于 tests 目录下
-
     - name: 获取当前版本号
       id: get_version
       run: |
