@@ -49,7 +49,11 @@ jobs:
         if [ -z "$current_version" ]; then
           current_version="version_0.0"  # 如果没有版本则初始化为 version_0.0
         fi
-        new_version=$(echo "$current_version" | awk -F. -v OFS=. '{$NF += 1; print}')  # 增加小版本号
+        # 增加小版本号
+        version_prefix=${current_version%.*}
+        version_suffix=${current_version#*.}
+        new_version_suffix=$((version_suffix + 1))
+        new_version="$version_prefix.$new_version_suffix"
         echo "new_version=$new_version" >> $GITHUB_ENV  # 将新版本号写入环境变量
 
     - name: 检查是否已经存在 Release
@@ -74,6 +78,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GITHUB_TOKEN 进行身份验证
 
     - name: 上传打包容件到 Release
+      if: env.skip_release == 'false'
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
