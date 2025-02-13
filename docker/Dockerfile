@@ -22,7 +22,7 @@ WORKDIR /app
 
 # 克隆后端代码
 RUN git clone https://gitee.com/tang9999/ipinfo.git .
-RUN git checkout index  # 如果有特定分支，可以替换为相应的分支名
+RUN git checkout index  # 切换到最新分支
 
 # 安装后端依赖
 RUN pip3 install --upgrade pip \
