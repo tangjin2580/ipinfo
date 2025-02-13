@@ -35,7 +35,7 @@ RUN mkdir -p /usr/share/nginx/html/
 RUN wget https://github.com/tangjin2580/ipinfo-web/releases/latest/download/dist.zip \
     && unzip dist.zip -d /usr/share/nginx/html \
     && mv /usr/share/nginx/html/dist/* /usr/share/nginx/html/ \
-    && rm -r dist \
+    && rm -rf /usr/share/nginx/html/dist \
     && rm dist.zip
 
 # 复制 nginx.conf 到 Nginx 配置目录
