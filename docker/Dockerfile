@@ -24,23 +24,26 @@ WORKDIR /app
 RUN git clone https://gitee.com/tang9999/ipinfo.git .
 RUN git checkout index  # 如果有特定分支，可以替换为相应的分支名
 
-# 创建并激活虚拟环境，安装后端依赖
-RUN python3 -m venv venv \
-    && ./venv/bin/pip install --upgrade pip \
-    && ./venv/bin/pip install -r requirements.txt \
-    && ./venv/bin/pip install gunicorn
-
+# 安装后端依赖
+RUN pip3 install --upgrade pip \
+    && pip3 install -r requirements.txt \
+    && pip3 install gunicorn
 # 创建目标目录
 RUN mkdir -p /usr/share/nginx/html/
 
 # 下载并解压前端构建包
 RUN wget https://github.com/tangjin2580/ipinfo-web/releases/latest/download/dist.zip \
-    && unzip dist.zip -d /usr/share/nginx/html/ \
+    && unzip dist.zip -d /usr/share/nginx/html \
+    && mv /usr/share/nginx/html/dist/* /usr/share/nginx/html/ \
+    && rm -r dist \
     && rm dist.zip
 
 # 复制 nginx.conf 到 Nginx 配置目录
 RUN cd /app/docker \
     && cp nginx.conf /etc/nginx/conf.d/default.conf
 
+EXPOSE 80
+EXPOSE 8080
 # 启动 Gunicorn 和 Nginx
-CMD ["bash", "-c", "venv/bin/gunicorn server.app:app -b 0.0.0.0:8080 --workers 4 --pid gunicorn.pid & nginx -g 'daemon off;'"]
+CMD ["bash", "-c", "cd /app/server && gunicorn app:app -b 0.0.0.0:8080 --workers 4 --pid gunicorn.pid & nginx -g 'daemon off;'"]
+
