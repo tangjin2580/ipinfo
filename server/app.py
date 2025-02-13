@@ -17,15 +17,19 @@ import json
 # 加载环境变量
 load_dotenv()
 
-# 创建时间戳
-timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-log_file_path = f'../log/app_{timestamp}.log'  # 日志文件保存在上级目录，并加上时间戳
+# 设置日志文件夹和路径
+log_dir = '../log'
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
 
-# 设置日志文件路径以及分割配置
+timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+log_file_path = os.path.join(log_dir, f'app_{timestamp}.log')
+
+# 设置日志处理器，按日期分割日志
 handler = TimedRotatingFileHandler(log_file_path, when="midnight", interval=1, backupCount=7)
 handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 
-# 设置根日志记录器
+# 设置日志记录器
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(handler)
@@ -49,7 +53,6 @@ executor = ThreadPoolExecutor(max_workers=5)
 # 初始化缓存，设置最大容量和有效期（一天）
 cache = TTLCache(maxsize=1000, ttl=86400)  # 86400 秒 = 1 天
 
-
 @app.route('/api/ipinfo/<string:input>', methods=['GET'])
 @limiter.limit("400 per minute")  # 每分钟限制 400 次请求
 def ip_info(input):
@@ -58,7 +61,6 @@ def ip_info(input):
     dns_server = request.args.get('dns', '114.114.114.114')
     logger.info(f'Received DNS server: {dns_server}')
 
-    # 判断输入是域名还是 IP 地址
     ips = [input] if input.count('.') == 3 else resolve_domain(input, dns_server)
 
     if not ips:
@@ -67,16 +69,13 @@ def ip_info(input):
 
     logger.info(f'Resolved IP(s): {ips} for input: {input}')
 
-    # 新增变量用于存储解析的域名
     history_domain = input if input.count('.') != 3 else None
 
-    # 检查缓存
     for ip in ips:
         if ip in cache:
             logger.info(f'Fetching {ip} from cache')
             all_ip_info.append(cache[ip])
         else:
-            # 使用线程池并行查询 IP 信息
             futures = {executor.submit(get_ip_info, ip): ip for ip in ips if ip not in cache}
 
             for future in futures:
@@ -88,13 +87,11 @@ def ip_info(input):
                         cache[ip] = data  # 将结果存入缓存
                         logger.info(f'Cached data for {ip}: {data}')  # 缓存成功的日志
 
-                        # 如果是通过域名查询的，记录域名
                         if history_domain:
                             country_code = data.get('country')
                             country_name = get_country_name(country_code)  # 获取中文国家名称
-                            save_query_history(history_domain, ip, dns_server, country_name)
+                            save_query_history(history_domain, ip, dns_server, country_name, data.get('city'))
 
-                        # 解析其它 IP 地址的信息（国家和地址）
                         address_info = get_ip_info(ip)
                         if address_info:
                             all_ip_info[-1].update(address_info)  # 更新当前 IP 信息
@@ -108,7 +105,6 @@ def ip_info(input):
 
     return jsonify(all_ip_info)
 
-
 def get_ip_info(ip):
     try:
         response = requests.get(f'https://ipinfo.io/{ip}/json?token={TOKEN}')
@@ -116,7 +112,6 @@ def get_ip_info(ip):
         data = response.json()
         logger.info(f'Successfully retrieved info for {ip}: {data}')
 
-        # 使用映射函数获取中文国家名称
         country_code = data.get('country')
         data['country'] = get_country_name(country_code)  # 替换为中文名称
 
@@ -124,7 +119,6 @@ def get_ip_info(ip):
     except requests.exceptions.RequestException as e:
         logger.error(f'Error fetching info for {ip}: {str(e)}')
         return None
-
 
 def resolve_domain(domain, dns_server='114.114.114.114'):
     logger.info(f'Attempting to resolve domain: {domain} using DNS: {dns_server}')
@@ -140,7 +134,6 @@ def resolve_domain(domain, dns_server='114.114.114.114'):
         logger.error(f'Error while resolving domain {domain}: {str(e)}')
         return []
 
-
 @app.route('/api/resolve/<string:domain>', methods=['GET'])
 @limiter.limit("400 per minute")  # 每分钟限制 400 次请求
 def resolve_domain_api(domain):
@@ -152,23 +145,21 @@ def resolve_domain_api(domain):
     logger.warning(f'Failed to resolve domain: {domain} with DNS: {dns_server}')
     return jsonify({'error': '未找到解析结果'}), 404
 
-
 # 历史记录文件路径
-history_file_path = '../log/query_history.json'
-
+history_file_path = os.path.join(log_dir, 'query_history.json')
 
 # 保存查询历史记录
-def save_query_history(domain, ip, dns_server, country):
+def save_query_history(domain, ip, dns_server, country, city):
     query_time = datetime.now().strftime('%Y-%m-%d %H-%M-%S')
     history_entry = {
         'domain': domain,
         'ip': ip,
         'dns': dns_server,
         'country': country,
+        'city': city,  # 保存城市信息
         'timestamp': query_time
     }
 
-    # 尝试读取已有历史记录
     try:
         if os.path.exists(history_file_path):
             with open(history_file_path, 'r') as f:
@@ -176,10 +167,8 @@ def save_query_history(domain, ip, dns_server, country):
         else:
             history = []
 
-        # 添加新的记录
         history.append(history_entry)
 
-        # 保存到文件
         with open(history_file_path, 'w') as f:
             json.dump(history, f, ensure_ascii=False, indent=4)
 
@@ -187,6 +176,61 @@ def save_query_history(domain, ip, dns_server, country):
     except Exception as e:
         logger.error(f'Error saving query history: {str(e)}')
 
+@app.route('/api/batch-query', methods=['POST'])
+@limiter.limit("200 per minute")  # 每分钟限制 200 次请求
+def batch_query():
+    try:
+        request_data = request.get_json()
+        if not request_data or 'domains' not in request_data or 'dns_servers' not in request_data:
+            return jsonify({'error': '请求格式错误，必须提供"domains"和"dns_servers"'}), 400
+
+        domains = request_data['domains']
+        dns_servers = request_data['dns_servers']
+
+        if not isinstance(domains, list) or not isinstance(dns_servers, list):
+            return jsonify({'error': '"domains" 和 "dns_servers" 应为列表'}), 400
+
+        if len(domains) == 0 or len(dns_servers) == 0:
+            return jsonify({'error': '"domains" 和 "dns_servers" 不能为空'}), 400
+
+        all_results = []
+        futures = []
+
+        for domain in domains:
+            for dns_server in dns_servers:
+                futures.append(executor.submit(query_domain_for_country, domain, dns_server))
+
+        for future in futures:
+            result = future.result()
+            if result:
+                all_results.append(result)
+
+        return jsonify(all_results)
+
+    except Exception as e:
+        logger.error(f'Error during batch query: {str(e)}')
+        return jsonify({'error': '批量查询失败'}), 500
+
+def query_domain_for_country(domain, dns_server):
+    try:
+        ips = resolve_domain(domain, dns_server)
+        if ips:
+            result = []
+            for ip in ips:
+                data = get_ip_info(ip)
+                if data:
+                    result.append({
+                        'domain': domain,
+                        'ip': ip,
+                        'dns': dns_server,
+                        'country': data.get('country'),
+                        'city': data.get('city')  # 获取城市信息
+                    })
+            return result
+        return None
+    except Exception as e:
+        logger.error(f'Error resolving domain {domain} with DNS {dns_server}: {str(e)}')
+        return None
 
 @app.route('/api/history', methods=['GET'])
 def get_history():
@@ -201,13 +245,11 @@ def get_history():
         logger.error(f'Error reading query history: {str(e)}')
         return jsonify({'error': '读取历史记录失败'}), 500
 
-
 @app.route('/api/clear-cache', methods=['POST'])
 def clear_cache():
     cache.clear()
     logger.info('Cache has been cleared.')
     return jsonify({'message': '缓存已清理'}), 200
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=False)

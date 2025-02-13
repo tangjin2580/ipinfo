@@ -1,6 +1,8 @@
-# 第一阶段：构建 Python 应用
-FROM debian:bullseye AS python_builder
+# 使用 Debian 作为基础镜像
+FROM debian:bullseye
 
+# 更换 Debian 的软件源为阿里云镜像（如果需要）
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list
 
 # 更新和安装系统依赖
 RUN apt-get update && apt-get install -y \
@@ -8,65 +10,37 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-venv \
     python3-pip \
+    git \
+    wget \
+    unzip \
+    nginx \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # 设置工作目录
 WORKDIR /app
 
-# 复制 requirements.txt 到工作目录
-COPY ../requirements.txt ./requirements.txt
+# 克隆后端代码
+RUN git clone https://gitee.com/tang9999/ipinfo.git .
+RUN git checkout index  # 如果有特定分支，可以替换为相应的分支名
 
-# 创建并激活虚拟环境，安装依赖
+# 创建并激活虚拟环境，安装后端依赖
 RUN python3 -m venv venv \
     && ./venv/bin/pip install --upgrade pip \
     && ./venv/bin/pip install -r requirements.txt \
-    && ./venv/bin/pip install gunicorn \
-    && ls -al ./venv/bin  # 确认 Gunicorn 是否存在
+    && ./venv/bin/pip install gunicorn
 
-# 复制 Flask 应用文件
-COPY server/app.py ./app.py
+# 创建目标目录
+RUN mkdir -p /usr/share/nginx/html/
 
-# 暴露端口
-EXPOSE 8080
+# 下载并解压前端构建包
+RUN wget https://github.com/tangjin2580/ipinfo-web/releases/latest/download/dist.zip \
+    && unzip dist.zip -d /usr/share/nginx/html/ \
+    && rm dist.zip
 
-# 启动 Gunicorn，指向虚拟环境中的 Flask 应用
-CMD ["./venv/bin/gunicorn", "app:app", "-b", "0.0.0.0:8080", "--workers", "4", "--pid", "gunicorn.pid"]
+# 复制 nginx.conf 到 Nginx 配置目录
+RUN cd /app/docker \
+    && cp nginx.conf /etc/nginx/conf.d/default.conf
 
-# 第二阶段：构建 Vue 应用
-FROM node:14 AS vue_builder
-
-
-RUN npm cache clean --force
-
-
-# 设置工作目录
-WORKDIR /app
-
-# 复制 package.json 和 package-lock.json 到容器中
-COPY ipinfo-web/package.json ipinfo-web/package-lock.json ./
-
-# 复制其余的项目文件到容器中
-COPY ipinfo-web/ ./
-
-# 安装依赖
-RUN npm install --verbose
-
-# 构建 Vue 应用
-RUN npm run build --verbose
-
-# 确保 dist 目录存在
-RUN ls -al dist && pwd
-
-# 第三阶段：使用 Nginx 提供服务
-FROM nginx:alpine AS nginx_builder
-
-# 复制打包好的 Vue 应用到 Nginx 目录
-COPY --from=vue_builder /app/dist/ /usr/share/nginx/html/
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# 暴露端口
-EXPOSE 80
-
-# 启动 Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# 启动 Gunicorn 和 Nginx
+CMD ["bash", "-c", "venv/bin/gunicorn server.app:app -b 0.0.0.0:8080 --workers 4 --pid gunicorn.pid & nginx -g 'daemon off;'"]
