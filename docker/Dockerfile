@@ -6,6 +6,7 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list
 
 # 更新和安装系统依赖
 RUN apt-get update && apt-get install -y \
+    curl \
     vim \
     build-essential \
     python3 \
