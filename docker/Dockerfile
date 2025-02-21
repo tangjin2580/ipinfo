@@ -4,8 +4,12 @@ FROM debian:bullseye
 # 更换 Debian 的软件源为阿里云镜像（如果需要）
 RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list
 
+# 设置时区
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+
 # 更新和安装系统依赖
 RUN apt-get update && apt-get install -y \
+    bash-completion \
     curl \
     vim \
     build-essential \
