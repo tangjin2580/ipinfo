@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   flask:
     image: crpi-soc4lkdq4i3mrdfh.cn-chengdu.personal.cr.aliyuncs.com/mydokcer/ipinfo-flask  # 更新后的镜像

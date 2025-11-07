@@ -49,7 +49,6 @@ RUN cd /app/docker \
     && cp nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-EXPOSE 8080
 # 启动 Gunicorn 和 Nginx
 CMD ["bash", "-c", "cd /app/server && gunicorn app:app -b 0.0.0.0:8080 --workers 4 --pid gunicorn.pid & nginx -g 'daemon off;'"]
 
