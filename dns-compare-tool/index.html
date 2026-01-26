@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS解析对比工具 | Professional DNS Resolver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #151b2e;
+            --bg-card: #1a2234;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #5b86e5 0%, #36d1dc 100%);
+            --gradient-accent: linear-gradient(135deg, #667eea 0%, #36d1dc 100%);
+            --color-accent-blue: #6366f1;
+            --color-accent-purple: #8b5cf6;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: rgba(148, 163, 184, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(118, 75, 162, 0.08) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #app {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 玻璃态卡片 */
+        .glass-card {
+            background: rgba(26, 34, 52, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-accent-blue);
+            color: var(--text-primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* 输入框 */
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .textarea-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .textarea-input:focus {
+            outline: none;
+            border-color: var(--color-accent-blue);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--color-accent-blue);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* 快捷按钮组 */
+        .quick-domains {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .quick-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--color-accent-blue);
+            color: var(--color-accent-blue);
+            transform: translateY(-1px);
+        }
+
+        /* DNS服务器选择 */
+        .dns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .dns-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dns-checkbox:hover {
+            border-color: var(--color-accent-blue);
+        }
+
+        .dns-checkbox.active {
+            border-color: var(--color-accent-blue);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .dns-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--color-accent-blue);
+        }
+
+        .dns-label {
+            flex: 1;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .dns-checkbox.active .dns-label {
+            color: var(--text-primary);
+        }
+
+        /* 布局网格 */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 表格样式 */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .results-table thead {
+            background: var(--bg-card);
+        }
+
+        .results-table th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .results-table td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .results-table tbody tr {
+            transition: all 0.2s ease;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .results-table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .ip-cell {
+            font-family: 'Consolas', monospace;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .diff-highlight {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .diff-highlight::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 4px;
+            border: 1px solid var(--color-accent-blue);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* 加载动画 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top-color: var(--color-accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* 历史记录 */
+        .history-item {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            border-color: var(--color-accent-blue);
+            transform: translateX(4px);
+        }
+
+        .history-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Toast通知 */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .toast.success {
+            border-color: var(--color-success);
+        }
+
+        .toast.error {
+            border-color: var(--color-error);
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            #app {
+                padding: 1rem;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dns-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .table-container {
+                font-size: 0.75rem;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* 工具提示 */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* 导出按钮 */
+        .action-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--color-success);
+        }
+
+        .badge-info {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--color-accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">🌐</div>
+                <h1 class="title">DNS解析对比工具</h1>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <button class="btn btn-secondary" @click="exportResults('csv')">导出CSV</button>
+                <button class="btn btn-secondary" @click="exportResults('json')">导出JSON</button>
+                <button class="btn btn-secondary" @click="clearCache">清除缓存</button>
+            </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-grid">
+            <!-- 域名输入 -->
+            <div class="glass-card">
+                <h3 class="card-title">域名输入</h3>
+                <div class="input-group">
+                    <label class="input-label">输入域名（每行一个）</label>
+                    <textarea 
+                        v-model="domainInput" 
+                        class="textarea-input" 
+                        placeholder="example.com&#10;google.com&#10;github.com"
+                    ></textarea>
+                </div>
+                <div class="quick-domains">
+                    <button 
+                        v-for="domain in quickDomains" 
+                        :key="domain"
+                        class="quick-btn"
+                        @click="addQuickDomain(domain)"
+                    >
+                        {{ domain }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- DNS服务器选择 -->
+            <div class="glass-card">
+                <h3 class="card-title">DNS服务器选择</h3>
+                <div class="dns-grid">
+                    <label 
+                        v-for="dns in presetDNS" 
+                        :key="dns.ip"
+                        class="dns-checkbox"
+                        :class="{ active: selectedDNS.includes(dns.ip) }"
+                    >
+                        <input 
+                            type="checkbox" 
+                            :value="dns.ip" 
+                            v-model="selectedDNS"
+                        />
+                        <span class="dns-label">{{ dns.name }}</span>
+                    </label>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">自定义DNS服务器</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input 
+                            v-model="customDNS" 
+                            type="text" 
+                            class="text-input" 
+                            placeholder="1.2.3.4"
+                        />
+                        <button class="btn btn-secondary" @click="addCustomDNS">添加</button>
+                    </div>
+                </div>
+                <button 
+                    class="btn btn-primary" 
+                    style="width: 100%; margin-top: 1rem;"
+                    @click="startQuery"
+                    :disabled="loading"
+                >
+                    {{ loading ? '查询中...' : '开始解析' }}
+                </button>
+            </div>
+        </div>
+
+        <!-- 解析结果 -->
+        <div class="glass-card" v-if="results.length > 0">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 class="card-title" style="margin-bottom: 0;">解析结果</h3>
+                <span class="badge badge-info">{{ results.length }} 条记录</span>
+            </div>
+            <div class="table-container">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>域名</th>
+                            <th>DNS服务器</th>
+                            <th>解析IP</th>
+                            <th>国家</th>
+                            <th>城市</th>
+                            <th>运营商</th>
+                            <th>耗时(ms)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(result, index) in results" :key="index">
+                            <td>{{ result.domain }}</td>
+                            <td>{{ result.dns }}</td>
+                            <td class="ip-cell" :class="{ 'diff-highlight': result.isDifferent }">
+                                {{ result.ip }}
+                            </td>
+                            <td>{{ result.country }}</td>
+                            <td>{{ result.city }}</td>
+                            <td>{{ result.isp || '-' }}</td>
+                            <td>
+                                <span class="badge badge-success">{{ result.resolve_time || '-' }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 空状态 -->
+        <div class="glass-card" v-else>
+            <div class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <p>暂无解析结果</p>
+                <p style="font-size: 0.875rem; margin-top: 0.5rem;">请输入域名并选择DNS服务器后开始查询</p>
+            </div>
+        </div>
+
+        <!-- 查询历史 -->
+        <div class="glass-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 class="card-title" style="margin-bottom: 0;">查询历史</h3>
+                <button class="btn btn-secondary" @click="clearHistory" style="padding: 0.5rem 1rem; font-size: 0.75rem;">
+                    清空历史
+                </button>
+            </div>
+            <div v-if="history.length > 0">
+                <div 
+                    v-for="(item, index) in history.slice(0, 10)" 
+                    :key="index"
+                    class="history-item"
+                    @click="loadHistory(item)"
+                >
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 500; color: var(--text-primary);">{{ item.domain }}</span>
+                        <span class="badge badge-info">{{ item.dns }}</span>
+                    </div>
+                    <div class="history-meta">
+                        <span>{{ item.ip }} - {{ item.country }} {{ item.city }}</span>
+                        <span>{{ formatTime(item.timestamp) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="empty-state" style="padding: 2rem 1rem;">
+                <p style="color: var(--text-muted);">暂无历史记录</p>
+            </div>
+        </div>
+
+        <!-- 加载动画 -->
+        <div v-if="loading" class="loading-overlay">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Toast通知 -->
+        <div v-if="toast.show" class="toast" :class="toast.type">
+            {{ toast.message }}
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    // API配置
+                    apiBaseUrl: 'http://localhost:8080',
+                    
+                    // 域名输入
+                    domainInput: '',
+                    quickDomains: ['google.com', 'baidu.com', 'github.com', 'youtube.com', 'taobao.com', 'qq.com'],
+                    
+                    // DNS服务器
+                    presetDNS: [
+                        { ip: '8.8.8.8', name: '8.8.8.8 (Google)' },
+                        { ip: '1.1.1.1', name: '1.1.1.1 (Cloudflare)' },
+                        { ip: '114.114.114.114', name: '114.114.114.114 (114 DNS)' },
+                        { ip: '223.5.5.5', name: '223.5.5.5 (阿里DNS)' },
+                        { ip: '180.76.76.76', name: '180.76.76.76 (百度DNS)' }
+                    ],
+                    selectedDNS: ['8.8.8.8', '1.1.1.1'],
+                    customDNS: '',
+                    
+                    // 结果和历史
+                    results: [],
+                    history: [],
+                    
+                    // 状态
+                    loading: false,
+                    toast: {
+                        show: false,
+                        message: '',
+                        type: 'success'
+                    }
+                };
+            },
+            
+            mounted() {
+                this.loadHistoryFromStorage();
+                this.fetchHistory();
+            },
+            
+            methods: {
+                // 添加快捷域名
+                addQuickDomain(domain) {
+                    const domains = this.domainInput.split('\n').filter(d => d.trim());
+                    if (!domains.includes(domain)) {
+                        domains.push(domain);
+                        this.domainInput = domains.join('\n');
+                    }
+                },
+                
+                // 添加自定义DNS
+                addCustomDNS() {
+                    const ip = this.customDNS.trim();
+                    if (!ip) return;
+                    
+                    // 简单IP格式验证
+                    const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+                    if (!ipRegex.test(ip)) {
+                        this.showToast('IP格式不正确', 'error');
+                        return;
+                    }
+                    
+                    if (!this.selectedDNS.includes(ip)) {
+                        this.selectedDNS.push(ip);
+                        this.presetDNS.push({ ip, name: `${ip} (自定义)` });
+                        this.customDNS = '';
+                        this.showToast('DNS服务器添加成功', 'success');
+                    } else {
+                        this.showToast('该DNS服务器已存在', 'error');
+                    }
+                },
+                
+                // 开始查询
+                async startQuery() {
+                    // 验证输入
+                    const domains = this.domainInput.split('\n')
+                        .map(d => d.trim())
+                        .filter(d => d);
+                    
+                    if (domains.length === 0) {
+                        this.showToast('请输入至少一个域名', 'error');
+                        return;
+                    }
+                    
+                    if (this.selectedDNS.length === 0) {
+                        this.showToast('请选择至少一个DNS服务器', 'error');
+                        return;
+                    }
+                    
+                    // 域名格式验证
+                    const domainRegex = /^[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
+                    const invalidDomains = domains.filter(d => !domainRegex.test(d));
+                    if (invalidDomains.length > 0) {
+                        this.showToast(`域名格式错误: ${invalidDomains.join(', ')}`, 'error');
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    
+                    try {
+                        const response = await axios.post(
+                            `${this.apiBaseUrl}/api/batch-query`,
+                            {
+                                domains: domains,
+                                dns_servers: this.selectedDNS
+                            },
+                            {
+                                timeout: 30000
+                            }
+                        );
+                        
+                        this.results = response.data;
+                        this.markDifferences();
+                        this.saveToHistory();
+                        this.showToast('查询完成', 'success');
+                        
+                    } catch (error) {
+                        console.error('Query error:', error);
+                        
+                        // 如果API不可用，生成模拟数据用于演示
+                        this.showToast('API服务暂不可用，已切换到演示模式', 'error');
+                        this.generateMockData(domains);
+                        this.markDifferences();
+                        this.saveToHistory();
+                        
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                // 生成模拟数据（用于演示）
+                generateMockData(domains) {
+                    const mockLocations = [
+                        { country: 'United States', city: 'San Francisco', isp: 'CloudFlare' },
+                        { country: 'China', city: 'Beijing', isp: 'China Telecom' },
+                        { country: 'Singapore', city: 'Singapore', isp: 'AWS' },
+                        { country: 'Japan', city: 'Tokyo', isp: 'Alibaba Cloud' }
+                    ];
+                    
+                    this.results = [];
+                    domains.forEach(domain => {
+                        this.selectedDNS.forEach((dns, index) => {
+                            const loc = mockLocations[index % mockLocations.length];
+                            const baseIP = Math.floor(Math.random() * 200) + 10;
+                            this.results.push({
+                                domain,
+                                dns,
+                                ip: `${baseIP}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                                country: loc.country,
+                                city: loc.city,
+                                isp: loc.isp,
+                                resolve_time: Math.floor(Math.random() * 100) + 20
+                            });
+                        });
+                    });
+                },
+                
+                // 标记IP差异
+                markDifferences() {
+                    const domainGroups = {};
+                    this.results.forEach(result => {
+                        if (!domainGroups[result.domain]) {
+                            domainGroups[result.domain] = [];
+                        }
+                        domainGroups[result.domain].push(result);
+                    });
+                    
+                    Object.values(domainGroups).forEach(group => {
+                        if (group.length > 1) {
+                            const ips = [...new Set(group.map(r => r.ip))];
+                            if (ips.length > 1) {
+                                group.forEach(result => {
+                                    result.isDifferent = true;
+                                });
+                            }
+                        }
+                    });
+                },
+                
+                // 保存到历史
+                saveToHistory() {
+                    const timestamp = new Date().toISOString();
+                    this.results.forEach(result => {
+                        this.history.unshift({
+                            ...result,
+                            timestamp
+                        });
+                    });
+                    
+                    // 只保留最新50条
+                    this.history = this.history.slice(0, 50);
+                    localStorage.setItem('dns_history', JSON.stringify(this.history));
+                },
+                
+                // 从localStorage加载历史
+                loadHistoryFromStorage() {
+                    const stored = localStorage.getItem('dns_history');
+                    if (stored) {
+                        try {
+                            this.history = JSON.parse(stored);
+                        } catch (e) {
+                            console.error('Failed to parse history:', e);
+                        }
+                    }
+                },
+                
+                // 从API获取历史
+                async fetchHistory() {
+                    try {
+                        const response = await axios.get(`${this.apiBaseUrl}/api/history?limit=10`);
+                        // 合并API历史和本地历史
+                        this.history = [...response.data, ...this.history];
+                    } catch (error) {
+                        console.log('API history not available, using local storage only');
+                    }
+                },
+                
+                // 加载历史记录
+                loadHistory(item) {
+                    this.domainInput = item.domain;
+                    this.showToast('已加载历史记录，点击"开始解析"重新查询', 'success');
+                },
+                
+                // 清空历史
+                clearHistory() {
+                    if (confirm('确定要清空所有历史记录吗？')) {
+                        this.history = [];
+                        localStorage.removeItem('dns_history');
+                        this.showToast('历史记录已清空', 'success');
+                    }
+                },
+                
+                // 清除缓存
+                async clearCache() {
+                    try {
+                        await axios.post(`${this.apiBaseUrl}/api/clear-cache`);
+                        this.showToast('缓存已清除', 'success');
+                    } catch (error) {
+                        this.showToast('缓存清除失败，API服务不可用', 'error');
+                    }
+                },
+                
+                // 导出结果
+                exportResults(format) {
+                    if (this.results.length === 0) {
+                        this.showToast('暂无数据可导出', 'error');
+                        return;
+                    }
+                    
+                    if (format === 'json') {
+                        this.exportJSON();
+                    } else if (format === 'csv') {
+                        this.exportCSV();
+                    }
+                },
+                
+                // 导出JSON
+                exportJSON() {
+                    const dataStr = JSON.stringify(this.results, null, 2);
+                    const blob = new Blob([dataStr], { type: 'application/json' });
+                    this.downloadFile(blob, `dns-results-${Date.now()}.json`);
+                    this.showToast('JSON文件已导出', 'success');
+                },
+                
+                // 导出CSV
+                exportCSV() {
+                    const headers = ['域名', 'DNS服务器', '解析IP', '国家', '城市', '运营商', '耗时(ms)'];
+                    const rows = this.results.map(r => [
+                        r.domain,
+                        r.dns,
+                        r.ip,
+                        r.country,
+                        r.city,
+                        r.isp || '-',
+                        r.resolve_time || '-'
+                    ]);
+                    
+                    const csvContent = [
+                        headers.join(','),
+                        ...rows.map(row => row.join(','))
+                    ].join('\n');
+                    
+                    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                    this.downloadFile(blob, `dns-results-${Date.now()}.csv`);
+                    this.showToast('CSV文件已导出', 'success');
+                },
+                
+                // 下载文件
+                downloadFile(blob, filename) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                
+                // 显示Toast
+                showToast(message, type = 'success') {
+                    this.toast = { show: true, message, type };
+                    setTimeout(() => {
+                        this.toast.show = false;
+                    }, 3000);
+                },
+                
+                // 格式化时间
+                formatTime(timestamp) {
+                    if (!timestamp) return '';
+                    
+                    const now = new Date();
+                    const time = new Date(timestamp);
+                    const diff = Math.floor((now - time) / 1000); // 秒
+                    
+                    if (diff < 60) return '刚刚';
+                    if (diff < 3600) return `${Math.floor(diff / 60)}分钟前`;
+                    if (diff < 86400) return `${Math.floor(diff / 3600)}小时前`;
+                    if (diff < 604800) return `${Math.floor(diff / 86400)}天前`;
+                    
+                    return time.toLocaleDateString('zh-CN');
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
