@@ -255,7 +255,7 @@ MIT License
 
 ## 📞 联系方式
 
-- 项目维护: Matrix Agent
+- 项目维护: Tangjin
 - 技术支持: 查看 [完整文档](docs/完整文档.md)
 
 ---
