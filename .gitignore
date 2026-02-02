@@ -1,0 +1,52 @@
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+workspace.code-workspace
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+server/.env
+server/gunicorn.pid
+server/flask.pid
+*.pid
+*.log
+log/*.log
+log/*.gz
+!log/query_history.json
+
+# Backup
+.backup/
+
+# Database files (大文件不提交)
+server/db/*.mmdb
+server/db/*.tar.gz
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+nuitka-crash-report.xml

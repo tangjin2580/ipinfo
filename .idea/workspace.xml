@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62186225-f381-47f4-9714-7cc820458270" name="更改" comment="nginx config">
+    <list default="true" id="62186225-f381-47f4-9714-7cc820458270" name="更改" comment="nginx bug fix">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/docker/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dns-compare-tool/DELIVERY.md" beforeDir="false" afterPath="$PROJECT_DIR$/dns-compare-tool/DELIVERY.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ipinfo-web" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +50,18 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;tangjin2580&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:tangjin2580/ipinfo.git&quot;,
+    &quot;accountId&quot;: &quot;52665a09-5744-4726-af13-204b71383e45&quot;
+  }
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -66,15 +82,19 @@
     &quot;Docker.docker/Dockerfile: Compose 部署.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker/Dockerfilemian.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker: Compose 部署.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript 调试.index.html.executor&quot;: &quot;Run&quot;,
     &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.app_ipinfo_mmdb.executor&quot;: &quot;Run&quot;,
+    &quot;Python.app_optimized_v2.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.京东商城商品数据.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;index&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/Mr.li/Documents/Git/ipinfo/server/dist&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/Mr.li/Documents/Git/ipinfo/server/db&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -82,14 +102,16 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.qodana&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/PyCharm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/server/dist" />
+      <recent name="$PROJECT_DIR$/server/db" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/server/dist" />
       <recent name="$PROJECT_DIR$/static/js" />
       <recent name="$PROJECT_DIR$/server" />
     </key>
@@ -108,31 +130,11 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Docker.docker/Dockerfile: Compose 部署">
-    <configuration name="京东商城商品数据" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ipinfo" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5918a9a35f2f346632a4353b9b2796b6/Message/MessageTemp/46dab0dc802fc1b24b44c1775e753fb0/File" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5918a9a35f2f346632a4353b9b2796b6/Message/MessageTemp/46dab0dc802fc1b24b44c1775e753fb0/File/京东商城商品数据.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
+  <component name="RunManager" selected="JavaScript 调试.index.html">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/ipinfo/dns-compare-tool/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ipinfo" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -146,7 +148,53 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server/app.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="app_ipinfo_mmdb" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ipinfo" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/server" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server/app_ipinfo_mmdb.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="app_optimized_v2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ipinfo" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/server" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server/app_optimized_v2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -167,14 +215,6 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="docker: Compose 部署" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="sourceFilePath" value="docker/docker-compose.yml" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
     <configuration name="docker/Dockerfile: Compose 部署" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
@@ -183,28 +223,20 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="docker/Dockerfilemian" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
-      <deployment type="dockerfile">
-        <settings>
-          <option name="sourceFilePath" value="docker/Dockerfilemian" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Docker.docker/Dockerfilemian" />
-      <item itemvalue="Docker.docker: Compose 部署" />
       <item itemvalue="Docker.docker/Dockerfile: Compose 部署" />
-      <item itemvalue="Python.京东商城商品数据" />
-      <item itemvalue="Python.main" />
+      <item itemvalue="JavaScript 调试.index.html" />
+      <item itemvalue="Python.app_ipinfo_mmdb" />
+      <item itemvalue="Python.app_optimized_v2" />
+      <item itemvalue="Python.app" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.app" />
+        <item itemvalue="JavaScript 调试.index.html" />
+        <item itemvalue="Python.app_ipinfo_mmdb" />
+        <item itemvalue="Python.app_optimized_v2" />
         <item itemvalue="Docker.docker/Dockerfile: Compose 部署" />
-        <item itemvalue="Python.京东商城商品数据" />
-        <item itemvalue="Docker.docker/Dockerfilemian" />
-        <item itemvalue="Docker.docker: Compose 部署" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -248,7 +280,30 @@
       <workItem from="1737510388981" duration="3539000" />
       <workItem from="1737514738909" duration="17017000" />
       <workItem from="1739175278089" duration="6874000" />
-      <workItem from="1739324736475" duration="14948000" />
+      <workItem from="1739324736475" duration="23608000" />
+      <workItem from="1740115539428" duration="395000" />
+      <workItem from="1740116327453" duration="7655000" />
+      <workItem from="1740976858924" duration="155000" />
+      <workItem from="1747214399403" duration="396000" />
+      <workItem from="1747214838239" duration="124000" />
+      <workItem from="1747896639958" duration="805000" />
+      <workItem from="1747897463819" duration="13000" />
+      <workItem from="1748333294119" duration="132000" />
+      <workItem from="1748333436894" duration="16000" />
+      <workItem from="1748333751526" duration="26000" />
+      <workItem from="1748333866663" duration="276000" />
+      <workItem from="1748334157787" duration="48000" />
+      <workItem from="1748334251720" duration="345000" />
+      <workItem from="1748334616680" duration="338000" />
+      <workItem from="1748335209217" duration="130000" />
+      <workItem from="1748335345418" duration="12000" />
+      <workItem from="1761552731000" duration="641000" />
+      <workItem from="1762486002939" duration="1396000" />
+      <workItem from="1762487626834" duration="1294000" />
+      <workItem from="1763691442894" duration="70000" />
+      <workItem from="1769407675440" duration="3216000" />
+      <workItem from="1769412007435" duration="4720000" />
+      <workItem from="1769418578161" duration="115000" />
     </task>
     <task id="LOCAL-00002" summary="pip freeze &gt; requirements.txt">
       <created>1732258588460</created>
@@ -278,52 +333,12 @@
       <option name="project" value="LOCAL" />
       <updated>1732265050804</updated>
     </task>
-    <task id="LOCAL-00008" summary="dns查询修复">
-      <option name="closed" value="true" />
-      <created>1732520432508</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1732520432508</updated>
-    </task>
     <task id="LOCAL-00009" summary="dns查询修复">
       <created>1732520903952</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
       <updated>1732520903952</updated>
-    </task>
-    <task id="LOCAL-00010" summary="background picture">
-      <option name="closed" value="true" />
-      <created>1732521990134</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1732521990134</updated>
-    </task>
-    <task id="LOCAL-00011" summary="background picture and theme">
-      <option name="closed" value="true" />
-      <created>1732524286309</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1732524286309</updated>
-    </task>
-    <task id="LOCAL-00012" summary="分离">
-      <option name="closed" value="true" />
-      <created>1732524501921</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1732524501921</updated>
-    </task>
-    <task id="LOCAL-00013" summary="安装脚本">
-      <option name="closed" value="true" />
-      <created>1732526752687</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1732526752687</updated>
     </task>
     <task id="LOCAL-00014" summary="修改打包路径">
       <created>1732601436071</created>
@@ -457,14 +472,6 @@
       <option name="presentableId" value="LOCAL-00032" />
       <option name="project" value="LOCAL" />
       <updated>1732868966628</updated>
-    </task>
-    <task id="LOCAL-00033" summary="history">
-      <option name="closed" value="true" />
-      <created>1737525270014</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1737525270014</updated>
     </task>
     <task id="LOCAL-00034" summary="history">
       <option name="closed" value="true" />
@@ -618,7 +625,55 @@
       <option name="project" value="LOCAL" />
       <updated>1739420513468</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="nginx config">
+      <option name="closed" value="true" />
+      <created>1739420937598</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1739420937598</updated>
+    </task>
+    <task id="LOCAL-00054" summary="nginx config fix">
+      <option name="closed" value="true" />
+      <created>1739424355624</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1739424355624</updated>
+    </task>
+    <task id="LOCAL-00055" summary="nginx config fix">
+      <option name="closed" value="true" />
+      <created>1739424912229</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1739424912229</updated>
+    </task>
+    <task id="LOCAL-00056" summary="nginx config fix">
+      <option name="closed" value="true" />
+      <created>1739438084632</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1739438084632</updated>
+    </task>
+    <task id="LOCAL-00057" summary="后台接口">
+      <option name="closed" value="true" />
+      <created>1740116733499</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1740116733499</updated>
+    </task>
+    <task id="LOCAL-00058" summary="nginx bug fix">
+      <option name="closed" value="true" />
+      <created>1740116797935</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1740116797936</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -648,9 +703,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="修改打包路径" />
-    <MESSAGE value="requirements add actions" />
-    <MESSAGE value="Package" />
     <MESSAGE value="dockerfile" />
     <MESSAGE value="the docker" />
     <MESSAGE value="README.md" />
@@ -673,13 +725,18 @@
     <MESSAGE value="验证版本号格式1" />
     <MESSAGE value="dockcer build" />
     <MESSAGE value="nginx config" />
-    <option name="LAST_COMMIT_MESSAGE" value="nginx config" />
+    <MESSAGE value="nginx config fix" />
+    <MESSAGE value="后台接口" />
+    <MESSAGE value="nginx bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="nginx bug fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ipinfo$app_ipinfo_mmdb.coverage" NAME="app_ipinfo_mmdb 覆盖结果" MODIFIED="1769413677479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
+    <SUITE FILE_PATH="coverage/ipinfo$app_optimized_v2.coverage" NAME="app_optimized_v2 覆盖结果" MODIFIED="1769412531836" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
     <SUITE FILE_PATH="coverage/ipinfo$.coverage" NAME="京东商城商品数据 覆盖结果" MODIFIED="1739326969176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/5918a9a35f2f346632a4353b9b2796b6/Message/MessageTemp/46dab0dc802fc1b24b44c1775e753fb0/File" />
     <SUITE FILE_PATH="coverage/ipinfo$ipinfo.coverage" NAME="ipinfo 覆盖结果" MODIFIED="1732859283966" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
     <SUITE FILE_PATH="coverage/ipinfo$python_app_py.coverage" NAME="python app.py 覆盖结果" MODIFIED="1732859416049" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ipinfo$app.coverage" NAME="app 覆盖结果" MODIFIED="1737510581295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
+    <SUITE FILE_PATH="coverage/ipinfo$app.coverage" NAME="app 覆盖结果" MODIFIED="1769417538199" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
     <SUITE FILE_PATH="coverage/ipinfo$pip.coverage" NAME="pip 覆盖结果" MODIFIED="1732601938221" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/venv/bin" />
     <SUITE FILE_PATH="coverage/ipinfo$python_server_app_py.coverage" NAME="python server/app.py 覆盖结果" MODIFIED="1732859402900" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ipinfo$main.coverage" NAME="main 覆盖结果" MODIFIED="1737524957807" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />
