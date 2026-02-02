@@ -1,0 +1,156 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # 例如: v1.0.0, v2.1.3
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (例如: 1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    name: 创建 Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史以生成变更日志
+
+    - name: 确定版本号
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+          echo "version=v${VERSION}" >> $GITHUB_OUTPUT
+        else
+          VERSION="${GITHUB_REF#refs/tags/}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        fi
+        echo "📦 发布版本: ${VERSION}"
+
+    - name: 生成变更日志
+      id: changelog
+      run: |
+        VERSION="${{ steps.version.outputs.version }}"
+        
+        # 获取上一个标签
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 ${VERSION}^ 2>/dev/null || echo "")
+        
+        if [ -z "$PREVIOUS_TAG" ]; then
+          echo "📝 首次发布"
+          CHANGELOG="## 首次发布\n\n$(git log --pretty=format:'- %s (%h)' --reverse)"
+        else
+          echo "📝 生成从 ${PREVIOUS_TAG} 到 ${VERSION} 的变更日志"
+          CHANGELOG="## 变更内容\n\n$(git log ${PREVIOUS_TAG}..${VERSION} --pretty=format:'- %s (%h)' --reverse)"
+        fi
+        
+        # 保存到文件
+        echo -e "$CHANGELOG" > CHANGELOG.md
+        
+        # 输出到 GitHub
+        {
+          echo 'changelog<<EOF'
+          cat CHANGELOG.md
+          echo EOF
+        } >> $GITHUB_OUTPUT
+
+    - name: 设置 Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: 准备发布文件
+      run: |
+        mkdir -p release-artifacts
+        
+        # 打包源代码 (不包含 venv 和 node_modules)
+        tar -czf release-artifacts/ipinfo-source-${{ steps.version.outputs.version }}.tar.gz \
+          --exclude='venv' \
+          --exclude='node_modules' \
+          --exclude='.git' \
+          --exclude='__pycache__' \
+          --exclude='*.pyc' \
+          --exclude='log/*' \
+          --exclude='.DS_Store' \
+          server/ dns-compare-tool/ docker/ docs/ *.md *.txt *.sh
+        
+        # 创建部署清单
+        cat > release-artifacts/RELEASE_NOTES.md << 'EOF'
+        # IPinfo DNS 解析系统 ${{ steps.version.outputs.version }}
+        
+        ## 📦 发布文件说明
+        
+        - `ipinfo-source-${{ steps.version.outputs.version }}.tar.gz` - 完整源代码包
+        
+        ## 🚀 快速部署
+        
+        ### 方式 1: Docker 部署 (推荐)
+        ```bash
+        docker pull ${{ secrets.DOCKER_USERNAME }}/ipinfo-flask:${{ steps.version.outputs.version }}
+        docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/ipinfo-flask:${{ steps.version.outputs.version }}
+        ```
+        
+        ### 方式 2: 源码部署
+        ```bash
+        tar -xzf ipinfo-source-${{ steps.version.outputs.version }}.tar.gz
+        cd server
+        pip install -r requirements.txt
+        python app.py
+        ```
+        
+        ## 📖 完整文档
+        
+        查看 [完整文档](https://github.com/${{ github.repository }}/blob/main/docs/完整文档.md)
+        
+        ---
+        
+        EOF
+        
+        # 添加变更日志到发布说明
+        cat CHANGELOG.md >> release-artifacts/RELEASE_NOTES.md
+        
+        # 列出文件
+        ls -lh release-artifacts/
+
+    - name: 创建 GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.version.outputs.version }}
+        name: Release ${{ steps.version.outputs.version }}
+        body_path: release-artifacts/RELEASE_NOTES.md
+        draft: false
+        prerelease: false
+        files: |
+          release-artifacts/*.tar.gz
+          release-artifacts/RELEASE_NOTES.md
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 上传构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-artifacts-${{ steps.version.outputs.version }}
+        path: release-artifacts/
+        retention-days: 90
+        compression-level: 9
+
+    - name: 发布摘要
+      run: |
+        echo "### 🎉 Release ${{ steps.version.outputs.version }} 创建成功！" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**下载地址:** https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Docker 镜像:**" >> $GITHUB_STEP_SUMMARY
+        echo '```bash' >> $GITHUB_STEP_SUMMARY
+        echo "docker pull ${{ secrets.DOCKER_USERNAME }}/ipinfo-flask:${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
