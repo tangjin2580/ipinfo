@@ -4,13 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62186225-f381-47f4-9714-7cc820458270" name="更改" comment="nginx bug fix">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="62186225-f381-47f4-9714-7cc820458270" name="更改" comment="docker.yml fixed">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dns-compare-tool/DELIVERY.md" beforeDir="false" afterPath="$PROJECT_DIR$/dns-compare-tool/DELIVERY.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ipinfo-web" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dns-compare-tool/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/dns-compare-tool/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/完整文档.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/完整文档.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/城市映射扩充说明.md" beforeDir="false" afterPath="$PROJECT_DIR$/server/城市映射扩充说明.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/项目整理总结.md" beforeDir="false" afterPath="$PROJECT_DIR$/项目整理总结.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -304,6 +305,7 @@
       <workItem from="1769407675440" duration="3216000" />
       <workItem from="1769412007435" duration="4720000" />
       <workItem from="1769418578161" duration="115000" />
+      <workItem from="1770012406137" duration="1250000" />
     </task>
     <task id="LOCAL-00002" summary="pip freeze &gt; requirements.txt">
       <created>1732258588460</created>
@@ -472,22 +474,6 @@
       <option name="presentableId" value="LOCAL-00032" />
       <option name="project" value="LOCAL" />
       <updated>1732868966628</updated>
-    </task>
-    <task id="LOCAL-00034" summary="history">
-      <option name="closed" value="true" />
-      <created>1737525662653</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1737525662653</updated>
-    </task>
-    <task id="LOCAL-00035" summary="history">
-      <option name="closed" value="true" />
-      <created>1737525942545</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1737525942545</updated>
     </task>
     <task id="LOCAL-00036" summary="history">
       <option name="closed" value="true" />
@@ -673,7 +659,23 @@
       <option name="project" value="LOCAL" />
       <updated>1740116797936</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="update readme">
+      <option name="closed" value="true" />
+      <created>1770013243839</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1770013243839</updated>
+    </task>
+    <task id="LOCAL-00060" summary="docker.yml fixed">
+      <option name="closed" value="true" />
+      <created>1770013518439</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1770013518439</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -703,8 +705,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="dockerfile" />
-    <MESSAGE value="the docker" />
     <MESSAGE value="README.md" />
     <MESSAGE value="ali docker" />
     <MESSAGE value="supervisord.conf" />
@@ -728,7 +728,9 @@
     <MESSAGE value="nginx config fix" />
     <MESSAGE value="后台接口" />
     <MESSAGE value="nginx bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="nginx bug fix" />
+    <MESSAGE value="update readme" />
+    <MESSAGE value="docker.yml fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="docker.yml fixed" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ipinfo$app_ipinfo_mmdb.coverage" NAME="app_ipinfo_mmdb 覆盖结果" MODIFIED="1769413677479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server" />

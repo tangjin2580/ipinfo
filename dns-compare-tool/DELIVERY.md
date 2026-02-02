@@ -327,7 +327,7 @@ MIT License
 
 ---
 
-**项目作者**: Matrix Agent  
+**项目作者**: Tangjin  
 **交付日期**: 2026-01-26  
 **在线地址**: https://babuhq6yqgm7.space.minimaxi.com
 
