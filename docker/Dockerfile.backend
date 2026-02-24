@@ -1,0 +1,36 @@
+# 后端 Flask 应用 Dockerfile
+FROM python:3.11-slim
+
+# 设置时区
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装系统依赖
+RUN apt-get update && apt-get install -y \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# 复制后端代码
+COPY server/requirements.txt /app/server/
+COPY server/app.py /app/server/
+COPY server/city_mapping.py /app/server/
+COPY server/country_mapping.py /app/server/
+COPY server/log_manager.py /app/server/
+COPY server/cleanup_logs.py /app/server/
+COPY server/db /app/server/db
+
+# 安装 Python 依赖
+RUN pip install --no-cache-dir -r /app/server/requirements.txt
+
+# 安装 Gunicorn
+RUN pip install --no-cache-dir gunicorn
+
+# 暴露端口
+EXPOSE 8080
+
+# 启动 Gunicorn
+CMD ["gunicorn", "server.app:app", "-b", "0.0.0.0:8080", "--workers", "4"]

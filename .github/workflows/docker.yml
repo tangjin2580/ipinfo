@@ -110,7 +110,7 @@ jobs:
     - name: 构建并推送前端镜像
       uses: docker/build-push-action@v5
       with:
-        context: ./dns-compare-tool
+        context: .
         file: ./docker/Dockerfile.nginx
         platforms: linux/amd64,linux/arm64
         push: ${{ github.event_name != 'pull_request' }}
